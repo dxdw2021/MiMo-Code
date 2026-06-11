@@ -19,6 +19,7 @@ export const Info = z
     z.object({
       type: z.literal("busy"),
       message: z.string().optional(),
+      startedAt: z.number().optional(),
     }),
   ])
   .meta({
@@ -71,6 +72,16 @@ export const layer = Layer.effect(
 
     const set = Effect.fn("SessionStatus.set")(function* (sessionID: SessionID, status: Info) {
       const data = yield* InstanceState.get(state)
+      // When transitioning to busy, stamp startedAt so the TUI can show elapsed time.
+      // Preserve the existing startedAt if the caller is re-setting busy (e.g. runLoop
+      // sets busy on each iteration) so the timer doesn't reset mid-turn.
+      if (status.type === "busy" && status.startedAt === undefined) {
+        const existing = data.get(sessionID)
+        status = {
+          ...status,
+          startedAt: existing?.type === "busy" && existing.startedAt ? existing.startedAt : Date.now(),
+        }
+      }
       yield* bus.publish(Event.Status, { sessionID, status })
       if (status.type === "idle") {
         yield* bus.publish(Event.Idle, { sessionID })

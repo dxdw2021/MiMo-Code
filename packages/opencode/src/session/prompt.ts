@@ -99,7 +99,7 @@ export function recallHintLines(toolCfg: ToolStyleConfig | undefined): string[] 
  * actors' MAX_PRE_REACT (=3) because main-session goals are usually larger.
  * TODO: lift to mimocode.json config (e.g. session.maxGoalReact).
  */
-const MAX_GOAL_REACT = 12
+const MAX_GOAL_REACT = 5
 
 /**
  * Number of consecutive finished assistant steps with an identical action
@@ -107,6 +107,18 @@ const MAX_GOAL_REACT = 12
  * signal the model is stuck repeating itself rather than making progress.
  */
 const REPEATED_STEP_THRESHOLD = 3
+
+/**
+ * Absolute safety cap on runLoop iterations per turn. Regardless of which
+ * continuation path (tool observation, taskGate, goalGate, overflow, etc.)
+ * drives the re-entry, the loop MUST terminate after this many iterations.
+ * Without this, a combination of paths (taskGate(3) + goalGate(5) + autoContinue
+ * + overflow) can sum to 15+ re-entries, each involving an LLM API call that
+ * takes seconds — the user perceives an infinite loop. The cap is intentionally
+ * generous (50) so it never clips a legitimate long-running agent task, but
+ * tight enough to guarantee termination within a few minutes at worst.
+ */
+const MAX_TOTAL_STEPS = 50
 
 /**
  * Deterministic JSON serialization with sorted object keys, so that two
@@ -2118,6 +2130,13 @@ NOTE: At any point in time through this workflow you should feel free to ask the
         })
 
         while (true) {
+          // P0 fix: absolute safety cap — regardless of which continuation path
+          // (tool observation, taskGate, goalGate, overflow, autoContinue, etc.)
+          // drives the re-entry, the loop MUST terminate after MAX_TOTAL_STEPS.
+          if (step >= MAX_TOTAL_STEPS) {
+            yield* slog.warn("runLoop hit MAX_TOTAL_STEPS; forcing break", { step, MAX_TOTAL_STEPS })
+            break
+          }
           // F55: only main agent sets session status to busy; subagent runners
           // must not touch session-level status (Runner.onBusy is Effect.void
           // for non-main actors per F47).

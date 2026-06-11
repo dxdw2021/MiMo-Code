@@ -1688,10 +1688,27 @@ export function Prompt(props: PromptProps) {
                     const s = status()
                     return s.type === "busy" ? s.message : undefined
                   })
+                  const busyStartedAt = createMemo(() => {
+                    const s = status()
+                    return s.type === "busy" ? s.startedAt : undefined
+                  })
+                  const [elapsed, setElapsed] = createSignal(0)
+                  onMount(() => {
+                    const timer = setInterval(() => {
+                      const started = busyStartedAt()
+                      if (started) setElapsed(Math.floor((Date.now() - started) / 1000))
+                    }, 1000)
+                    onCleanup(() => clearInterval(timer))
+                  })
                   return (
-                    <Show when={busyMessage()}>
-                      <text fg={theme.textMuted}>{busyMessage()}</text>
-                    </Show>
+                    <>
+                      <Show when={busyMessage()}>
+                        <text fg={theme.textMuted}>{busyMessage()}</text>
+                      </Show>
+                      <Show when={busyStartedAt() && elapsed() > 0}>
+                        <text fg={theme.textMuted}>{formatDuration(elapsed())}</text>
+                      </Show>
+                    </>
                   )
                 })()}
                 <box flexDirection="row" gap={1} flexShrink={0}>

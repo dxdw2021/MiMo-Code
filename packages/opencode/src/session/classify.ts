@@ -35,8 +35,17 @@ export function classifyAssistantStep(input: {
   phase: "existing-assistant" | "after-process"
   // Reserved for T01–T05 (stop/overflow control flow stays in runLoop for T00).
   processResult?: "continue" | "stop" | "overflow"
+  /**
+   * Milliseconds after which a tool part still in `running` state is considered
+   * stale (abandoned by the tool executor). Stale running parts are treated as
+   * if they were in `error` state — they do NOT trigger the `continue` path.
+   * Default: 5 minutes (300_000 ms). Set to 0 or Infinity to disable.
+   */
+  staleToolCallMs?: number
 }): StepClassification {
   const assistant = input.assistant
+  const staleMs = input.staleToolCallMs ?? 300_000
+  const now = Date.now()
 
   // 1. Core guarantee — beats everything: a pending client tool call must
   // re-loop so its observation is fed back to the model. EXCLUDE error-state
@@ -45,12 +54,20 @@ export function classifyAssistantStep(input: {
   // terminal failures. Without this guard, classify mis-routes errored steps
   // to "continue", runLoop re-enters and gets stranded on permission.ask
   // from the in-flight tool that won't ever resolve. See Spec ③.
+  //
+  // P0 fix: also EXCLUDE stale `running` tool parts — ones where the tool
+  // executor has been silent for longer than staleToolCallMs. These are
+  // typically abandoned (process killed, executor crashed, or the tool
+  // simply hung). Without this check, classify returns `continue` forever
+  // because the part never transitions out of `running`, creating an
+  // unbounded loop with no other exit path.
   if (
     input.parts.some(
       (part) =>
         part.type === "tool" &&
         !part.metadata?.providerExecuted &&
-        part.state.status !== "error",
+        part.state.status !== "error" &&
+        !(part.state.status === "running" && staleMs > 0 && assistant.time?.created && now - assistant.time.created > staleMs),
     )
   )
     return { type: "continue" }
