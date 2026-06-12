@@ -394,4 +394,9 @@ export const dict: Record<string, string> = {
 
   // Session badges
   "tui.session.badge.auto": "Auto",
+
+  // Retry display
+  "tui.prompt.retry.retrying": "retrying",
+  "tui.prompt.retry.inDuration": "in {{duration}}",
+  "tui.prompt.retry.attempt": "attempt #{{attempt}}",
 }

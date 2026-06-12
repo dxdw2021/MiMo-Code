@@ -1756,7 +1756,9 @@ export function Prompt(props: PromptProps) {
                       const baseMessage = message()
                       const truncatedHint = isTruncated() ? " (click to expand)" : ""
                       const duration = formatDuration(seconds())
-                      const retryInfo = ` [retrying ${duration ? `in ${duration} ` : ""}attempt #${r.attempt}]`
+                      const retryInfo = duration
+                        ? ` [${t("tui.prompt.retry.retrying")} ${t("tui.prompt.retry.inDuration", { duration })} ${t("tui.prompt.retry.attempt", { attempt: r.attempt })}]`
+                        : ` [${t("tui.prompt.retry.retrying")} ${t("tui.prompt.retry.attempt", { attempt: r.attempt })}]`
                       return baseMessage + truncatedHint + retryInfo
                     }
 

@@ -387,4 +387,9 @@ export const dict = {
 
   // Session badges
   "tui.session.badge.auto": "自动",
+
+  // Retry display
+  "tui.prompt.retry.retrying": "正在重试",
+  "tui.prompt.retry.inDuration": "{{duration}}后",
+  "tui.prompt.retry.attempt": "第{{attempt}}次",
 } satisfies Partial<Record<Keys, string>>

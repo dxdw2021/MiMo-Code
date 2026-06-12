@@ -449,4 +449,9 @@ export const dict = {
 
   // Session badges
   "tui.session.badge.auto": "Авто",
+
+  // Retry display
+  "tui.prompt.retry.retrying": "повторная попытка",
+  "tui.prompt.retry.inDuration": "через {{duration}}",
+  "tui.prompt.retry.attempt": "попытка #{{attempt}}",
 } satisfies Partial<Record<Keys, string>>
