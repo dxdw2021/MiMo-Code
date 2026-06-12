@@ -399,4 +399,28 @@ export const dict: Record<string, string> = {
   "tui.prompt.retry.retrying": "retrying",
   "tui.prompt.retry.inDuration": "in {{duration}}",
   "tui.prompt.retry.attempt": "attempt #{{attempt}}",
+
+  // Autocomplete
+  "tui.autocomplete.no_matching": "No matching items",
+
+  // Shell mode
+  "tui.shell.exit": "exit shell mode",
+
+  // Prompt
+  "tui.prompt.truncated.expand": "(click to expand)",
+
+  // Errors & notifications
+  "tui.error.fork_failed": "Failed to fork session",
+  "tui.heap_snapshot.written": "Heap snapshot written to {{files}}",
+  "tui.session.deleted": "The current session was deleted",
+  "tui.update.available.title": "Update Available",
+  "tui.update.available.message": "A new release v{{version}} is available. Would you like to update now?",
+  "tui.update.in_progress": "Updating to v{{version}}...",
+  "tui.update.failed.title": "Update Failed",
+  "tui.update.failed.message": "Update failed",
+  "tui.update.complete.title": "Update Complete",
+  "tui.update.complete.message": "Successfully updated to MiMoCode v{{version}}. Please restart the application.",
+  "tui.error.invalid_model": "Invalid model format: {{model}}",
+  "tui.error.interactive_reply_failed": "Interactive command reply failed: {{error}}",
+  "tui.bash.interactive": "(interactive)",
 }

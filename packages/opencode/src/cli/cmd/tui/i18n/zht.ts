@@ -394,4 +394,28 @@ export const dict = {
   "tui.prompt.retry.retrying": "正在重試",
   "tui.prompt.retry.inDuration": "{{duration}}後",
   "tui.prompt.retry.attempt": "第{{attempt}}次",
+
+  // Autocomplete
+  "tui.autocomplete.no_matching": "無符合項目",
+
+  // Shell mode
+  "tui.shell.exit": "退出 Shell 模式",
+
+  // Prompt
+  "tui.prompt.truncated.expand": "（點選展開）",
+
+  // Errors & notifications
+  "tui.error.fork_failed": "分叉工作階段失敗",
+  "tui.heap_snapshot.written": "堆積快照已寫入 {{files}}",
+  "tui.session.deleted": "目前工作階段已刪除",
+  "tui.update.available.title": "有可用更新",
+  "tui.update.available.message": "新版本 v{{version}} 已可用，是否立即更新？",
+  "tui.update.in_progress": "正在更新到 v{{version}}...",
+  "tui.update.failed.title": "更新失敗",
+  "tui.update.failed.message": "更新失敗",
+  "tui.update.complete.title": "更新完成",
+  "tui.update.complete.message": "已成功更新到 MiMoCode v{{version}}，請重新啟動應用程式。",
+  "tui.error.invalid_model": "模型格式無效：{{model}}",
+  "tui.error.interactive_reply_failed": "互動命令回覆失敗：{{error}}",
+  "tui.bash.interactive": "（互動式）",
 } satisfies Partial<Record<Keys, string>>

@@ -360,7 +360,7 @@ function App(props: { onSnapshot?: () => Promise<string[]> }) {
         if (!providerID || !modelID)
           return toast.show({
             variant: "warning",
-            message: `Invalid model format: ${args.model}`,
+            message: t("tui.error.invalid_model", { model: args.model }),
             duration: 3000,
           })
         local.model.set({ providerID, modelID }, { recent: true })
@@ -388,7 +388,7 @@ function App(props: { onSnapshot?: () => Promise<string[]> }) {
           if (result.data?.id) {
             route.navigate({ type: "session", sessionID: result.data.id })
           } else {
-            toast.show({ message: "Failed to fork session", variant: "error" })
+            toast.show({ message: t("tui.error.fork_failed"), variant: "error" })
           }
         })
       } else {
@@ -408,7 +408,7 @@ function App(props: { onSnapshot?: () => Promise<string[]> }) {
       if (result.data?.id) {
         route.navigate({ type: "session", sessionID: result.data.id })
       } else {
-        toast.show({ message: "Failed to fork session", variant: "error" })
+        toast.show({ message: t("tui.error.fork_failed"), variant: "error" })
       }
     })
   })
@@ -814,7 +814,7 @@ function App(props: { onSnapshot?: () => Promise<string[]> }) {
         const files = await props.onSnapshot?.()
         toast.show({
           variant: "info",
-          message: `Heap snapshot written to ${files?.join(", ")}`,
+          message: t("tui.heap_snapshot.written", { files: files?.join(", ") }),
           duration: 5000,
         })
         dialog.clear()
@@ -940,7 +940,7 @@ function App(props: { onSnapshot?: () => Promise<string[]> }) {
       route.navigate({ type: "home" })
       toast.show({
         variant: "info",
-        message: "The current session was deleted",
+        message: t("tui.session.deleted"),
       })
     }
   })
@@ -965,8 +965,8 @@ function App(props: { onSnapshot?: () => Promise<string[]> }) {
 
     const choice = await DialogConfirm.show(
       dialog,
-      `Update Available`,
-      `A new release v${version} is available. Would you like to update now?`,
+      t("tui.update.available.title"),
+      t("tui.update.available.message", { version }),
       "skip",
     )
 
@@ -979,7 +979,7 @@ function App(props: { onSnapshot?: () => Promise<string[]> }) {
 
     toast.show({
       variant: "info",
-      message: `Updating to v${version}...`,
+      message: t("tui.update.in_progress", { version }),
       duration: 30000,
     })
 
@@ -988,8 +988,8 @@ function App(props: { onSnapshot?: () => Promise<string[]> }) {
     if (result.error || !result.data?.success) {
       toast.show({
         variant: "error",
-        title: "Update Failed",
-        message: "Update failed",
+        title: t("tui.update.failed.title"),
+        message: t("tui.update.failed.message"),
         duration: 10000,
       })
       return
@@ -997,8 +997,8 @@ function App(props: { onSnapshot?: () => Promise<string[]> }) {
 
     await DialogAlert.show(
       dialog,
-      "Update Complete",
-      `Successfully updated to MiMoCode v${result.data.version}. Please restart the application.`,
+      t("tui.update.complete.title"),
+      t("tui.update.complete.message", { version: result.data.version }),
     )
 
     void exit()
@@ -1011,7 +1011,7 @@ function App(props: { onSnapshot?: () => Promise<string[]> }) {
     const id = typeof props.id === "string" ? props.id : undefined
     const command = typeof props.command === "string" ? props.command : undefined
     const cwd = typeof props.cwd === "string" ? props.cwd : undefined
-    const description = typeof props.description === "string" ? props.description : "(interactive)"
+    const description = typeof props.description === "string" ? props.description : t("tui.bash.interactive")
     const env = props.env && typeof props.env === "object" ? (props.env as Record<string, string>) : undefined
     if (!id || !command || !cwd) return
 
@@ -1065,7 +1065,7 @@ function App(props: { onSnapshot?: () => Promise<string[]> }) {
         } catch (retryErr: any) {
           toast.show({
             variant: "error",
-            message: `Interactive command reply failed: ${retryErr?.message ?? "unknown"}`,
+            message: t("tui.error.interactive_reply_failed", { error: retryErr?.message ?? "unknown" }),
           })
         }
       }

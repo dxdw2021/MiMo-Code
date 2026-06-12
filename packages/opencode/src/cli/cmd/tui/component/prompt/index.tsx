@@ -1754,7 +1754,7 @@ export function Prompt(props: PromptProps) {
                       const r = retry()
                       if (!r) return ""
                       const baseMessage = message()
-                      const truncatedHint = isTruncated() ? " (click to expand)" : ""
+                      const truncatedHint = isTruncated() ? t("tui.prompt.truncated.expand") : ""
                       const duration = formatDuration(seconds())
                       const retryInfo = duration
                         ? ` [${t("tui.prompt.retry.retrying")} ${t("tui.prompt.retry.inDuration", { duration })} ${t("tui.prompt.retry.attempt", { attempt: r.attempt })}]`
@@ -1817,7 +1817,7 @@ export function Prompt(props: PromptProps) {
                 <Match when={store.mode === "shell"}>
                   <box flexGrow={1} flexDirection="row" justifyContent="flex-end">
                     <text fg={theme.text}>
-                      esc <span style={{ fg: theme.textMuted }}>exit shell mode</span>
+                      esc <span style={{ fg: theme.textMuted }}>{t("tui.shell.exit")}</span>
                     </text>
                   </box>
                 </Match>
