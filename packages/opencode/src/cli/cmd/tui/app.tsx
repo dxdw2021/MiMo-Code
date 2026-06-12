@@ -814,7 +814,7 @@ function App(props: { onSnapshot?: () => Promise<string[]> }) {
         const files = await props.onSnapshot?.()
         toast.show({
           variant: "info",
-          message: t("tui.heap_snapshot.written", { files: files?.join(", ") }),
+          message: t("tui.heap_snapshot.written", { files: files?.join(", ") ?? "?" }),
           duration: 5000,
         })
         dialog.clear()
