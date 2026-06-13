@@ -9,11 +9,16 @@
   "mcp": {
     "playwright": {
       "type": "local",
-      "command": ["npx", "@playwright/mcp", "--browser", "chromium"],
+      "command": ["npx", "@playwright/mcp", "--browser", "chrome"],
       "environment": {
         "PLAYWRIGHT_BROWSERS_PATH": "C:\\Users\\Administrator.LAPTOP-QMJNJC9F\\AppData\\Local\\ms-playwright"
       },
       "timeout": 120000,
+      "enabled": true
+    },
+    "chrome-devtools": {
+      "type": "local",
+      "command": ["npx", "-y", "chrome-devtools-mcp@latest"],
       "enabled": true
     }
   },
