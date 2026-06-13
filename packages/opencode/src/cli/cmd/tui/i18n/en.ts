@@ -265,6 +265,10 @@ export const dict: Record<string, string> = {
   "tui.permission.reject.placeholder": "Tell MiMoCode what to do differently",
   "tui.permission.reject.confirm": "confirm",
   "tui.permission.reject.cancel": "cancel",
+  "tui.permission.allow_always.title_single": "This will allow {{permission}} until MiMoCode is restarted.",
+  "tui.permission.allow_always.title_multi": "This will allow the following patterns until MiMoCode is restarted",
+  "tui.permission.allow_always.confirm": "Confirm",
+  "tui.permission.allow_always.cancel": "Cancel",
 
   // MCP sidebar
   "tui.mcp.label": "MCP",

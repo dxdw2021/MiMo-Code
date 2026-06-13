@@ -418,4 +418,18 @@ export const dict = {
   "tui.error.invalid_model": "模型格式無效：{{model}}",
   "tui.error.interactive_reply_failed": "互動命令回覆失敗：{{error}}",
   "tui.bash.interactive": "（互動式）",
+
+  // Permission dialog
+  "tui.permission.title": "需要權限",
+  "tui.permission.allow_once": "允許一次",
+  "tui.permission.allow_always": "始終允許",
+  "tui.permission.reject": "拒絕",
+  "tui.permission.reject.title": "拒絕權限",
+  "tui.permission.reject.placeholder": "告訴 MiMoCode 該怎麼做",
+  "tui.permission.reject.confirm": "確認",
+  "tui.permission.reject.cancel": "取消",
+  "tui.permission.allow_always.title_single": "將允許 {{permission}}，直到 MiMoCode 重啟。",
+  "tui.permission.allow_always.title_multi": "將允許以下模式，直到 MiMoCode 重啟",
+  "tui.permission.allow_always.confirm": "確認",
+  "tui.permission.allow_always.cancel": "取消",
 } satisfies Partial<Record<Keys, string>>

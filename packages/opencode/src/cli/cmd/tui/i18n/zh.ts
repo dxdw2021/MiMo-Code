@@ -258,6 +258,10 @@ export const dict = {
   "tui.permission.reject.placeholder": "告诉 MiMoCode 该怎么做",
   "tui.permission.reject.confirm": "确认",
   "tui.permission.reject.cancel": "取消",
+  "tui.permission.allow_always.title_single": "将允许 {{permission}}，直到 MiMoCode 重启。",
+  "tui.permission.allow_always.title_multi": "将允许以下模式，直到 MiMoCode 重启",
+  "tui.permission.allow_always.confirm": "确认",
+  "tui.permission.allow_always.cancel": "取消",
 
   // MCP sidebar
   "tui.mcp.label": "MCP",
