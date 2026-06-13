@@ -6,5 +6,15 @@
       "packages/opencode/migration/*": "deny",
     },
   },
-  "mcp": {},
+  "mcp": {
+    "playwright": {
+      "type": "local",
+      "command": ["npx", "@playwright/mcp", "--browser", "chromium"],
+      "environment": {
+        "PLAYWRIGHT_BROWSERS_PATH": "C:\\Users\\Administrator.LAPTOP-QMJNJC9F\\AppData\\Local\\ms-playwright"
+      },
+      "timeout": 120000,
+      "enabled": true
+    }
+  },
 }
