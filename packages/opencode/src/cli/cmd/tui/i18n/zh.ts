@@ -237,6 +237,115 @@ export const dict = {
   "tui.dialog.prompt.processing": "处理中...",
   "tui.dialog.prompt.submit_key": "enter",
   "tui.dialog.prompt.submit_action": "提交",
+  // Dialog message actions
+  "tui.dialog.message.title": "消息操作",
+  "tui.dialog.message.revert.title": "撤销",
+  "tui.dialog.message.revert.description": "撤销消息和文件更改",
+  "tui.dialog.message.copy.title": "复制",
+  "tui.dialog.message.copy.description": "将消息文本复制到剪贴板",
+  "tui.dialog.message.fork.title": "派生",
+  "tui.dialog.message.fork.description": "创建新会话",
+
+  // Question prompt
+  "tui.question.answer.placeholder": "输入你的答案",
+
+  // Permission dialog
+  "tui.permission.title": "需要权限",
+  "tui.permission.allow_once": "允许一次",
+  "tui.permission.allow_always": "始终允许",
+  "tui.permission.reject": "拒绝",
+  "tui.permission.reject.title": "拒绝权限",
+  "tui.permission.reject.placeholder": "告诉 MiMoCode 该怎么做",
+  "tui.permission.reject.confirm": "确认",
+  "tui.permission.reject.cancel": "取消",
+
+  // MCP sidebar
+  "tui.mcp.label": "MCP",
+  "tui.mcp.connected": "已连接",
+  "tui.mcp.pending": "待批准",
+  "tui.mcp.disabled": "已禁用",
+  "tui.mcp.needs_auth": "需要授权",
+  "tui.mcp.needs_client_id": "需要客户端 ID",
+  "tui.mcp.active_count": "活跃",
+  "tui.mcp.error_count": "错误",
+  "tui.mcp.error_count_plural": "个错误",
+
+  // Status dialog
+  "tui.status.title": "状态",
+  "tui.status.no_mcp": "无 MCP 服务器",
+  "tui.status.mcp_count": "{{count}} 个 MCP 服务器",
+  "tui.status.connected": "已连接",
+  "tui.status.pending": "待批准",
+  "tui.status.disabled_config": "配置中已禁用",
+  "tui.status.needs_auth": "需要认证（运行：opencode mcp auth {{key}}）",
+  "tui.status.no_lsp": "无 LSP 服务器",
+  "tui.status.lsp_count": "{{count}} 个 LSP 服务器",
+  "tui.status.no_formatters": "无格式化器",
+  "tui.status.formatter_count": "{{count}} 个格式化器",
+  "tui.status.no_plugins": "无插件",
+  "tui.status.plugin_count": "{{count}} 个插件",
+
+  // Sidebar footer
+  "tui.sidebar.getting_started": "开始使用",
+  "tui.sidebar.free_models_desc": "MiMoCode 包含免费模型，你可以立即开始使用。",
+  "tui.sidebar.connect_providers_desc": "连接 75+ 服务商以使用其他模型，包括 Claude、GPT、Gemini 等",
+  "tui.sidebar.connect_provider": "连接服务商",
+
+  // Error component
+  "tui.error.report_issue": "请报告问题。",
+  "tui.error.copy_url": "复制问题链接（已预填异常信息）",
+  "tui.error.copied": "已复制",
+  "tui.error.fatal": "发生致命错误！",
+  "tui.error.reset_tui": "重置 TUI",
+  "tui.error.exit": "退出",
+
+  // Skill dialog
+  "tui.dialog.skill.title": "技能",
+  "tui.dialog.skill.placeholder": "搜索技能...",
+
+  // Provider dialog
+  "tui.dialog.provider.code.placeholder": "授权码",
+  "tui.dialog.provider.code.invalid": "无效的授权码",
+  "tui.dialog.provider.api.placeholder": "API 密钥",
+  "tui.dialog.provider.api.description.opencode": "OpenCode Zen 让你以最优惠的价格通过单个 API 密钥访问所有最佳编程模型。",
+  "tui.dialog.provider.api.description.opencode-go": "OpenCode Go 是一项每月 10 美元的订阅服务，为你提供对热门开源编码模型的可靠访问和慷慨的使用额度。",
+  "tui.dialog.provider.auto.waiting": "等待授权中...",
+  "tui.dialog.provider.auto.copy": "复制",
+
+
+  // Plugin UI
+  "tui.plugins.view.title": "插件",
+  "tui.plugins.view.toggle": "切换",
+  "tui.plugins.view.install": "安装",
+  "tui.plugins.install.title": "安装插件",
+  "tui.plugins.install.placeholder": "npm 包名",
+  "tui.plugins.install.busy": "正在安装插件...",
+  "tui.plugins.scope": "范围：",
+  "tui.plugins.scope_global": "全局",
+  "tui.plugins.scope_local": "本地",
+  "tui.plugins.toast.name_required": "需要提供插件包名",
+  "tui.plugins.toast.check_registry": "检查 npm 仓库/认证设置后重试。",
+  "tui.plugins.toast.installed": "已安装 {{mod}}（{{scope}}：{{dir}}）",
+  "tui.plugins.toast.no_tui_target": "该包在此应用中没有可加载的 TUI 目标。",
+  "tui.plugins.toast.load_failed": "已安装插件，但运行时加载失败。查看控制台/日志；重启 TUI 重试。",
+  "tui.plugins.toast.loaded": "已在当前会话中加载 {{mod}}。",
+  "tui.plugins.category_internal": "内置",
+  "tui.plugins.category_external": "外部",
+  "tui.plugins.state.disabled": "已禁用",
+  "tui.plugins.state.active": "运行中",
+  "tui.plugins.state.inactive": "未运行",
+  "tui.plugins.meta.builtin_long": "内置插件",
+  "tui.plugins.meta.builtin": "内置",
+  "tui.plugins.scope.toggle": "({{key}} 切换)",
+
+  // Prompt hint
+  "tui.prompt.hint.esc": "esc",
+  "tui.prompt.hint.interrupt": "中断",
+  "tui.prompt.hint.interrupt_again": "再次按 esc 中断",
+
+  // Message status
+  "tui.message.interrupted": "已中断",
+
   "tui.dialog.export.title": "导出选项",
   "tui.dialog.export.filename": "文件名：",
   "tui.dialog.export.filename_placeholder": "输入文件名",

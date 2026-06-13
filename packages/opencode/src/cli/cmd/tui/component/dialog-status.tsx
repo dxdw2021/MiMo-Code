@@ -4,6 +4,7 @@ import { useTheme } from "../context/theme"
 import { useDialog } from "@tui/ui/dialog"
 import { useSync } from "@tui/context/sync"
 import { For, Match, Switch, Show, createMemo } from "solid-js"
+import { useLanguage } from "@tui/context/language"
 
 export type DialogStatusProps = {}
 
@@ -11,6 +12,7 @@ export function DialogStatus() {
   const sync = useSync()
   const { theme } = useTheme()
   const dialog = useDialog()
+  const t = useLanguage().t
 
   const enabledFormatters = createMemo(() => sync.data.formatter.filter((f) => f.enabled))
 

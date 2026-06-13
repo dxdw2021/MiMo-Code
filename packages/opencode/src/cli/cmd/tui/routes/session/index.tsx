@@ -1339,6 +1339,7 @@ function AssistantMessage(props: { message: AssistantMessage; parts: Part[]; las
   const ctx = use()
   const local = useLocal()
   const { theme } = useTheme()
+  const t = useLanguage().t
   const sync = useSync()
   const messages = createMemo(() => sync.data.message[props.message.sessionID]?.[props.message.agentID ?? "main"] ?? [])
   const model = createMemo(() => Model.name(ctx.providers(), props.message.providerID, props.message.modelID))
@@ -1419,7 +1420,7 @@ function AssistantMessage(props: { message: AssistantMessage; parts: Part[]; las
                 <span style={{ fg: theme.textMuted }}> · {Locale.duration(duration())}</span>
               </Show>
               <Show when={props.message.error?.name === "MessageAbortedError"}>
-                <span style={{ fg: theme.textMuted }}> · interrupted</span>
+                <span style={{ fg: theme.textMuted }}> · {t("tui.message.interrupted")}</span>
               </Show>
             </text>
           </box>

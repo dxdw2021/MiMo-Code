@@ -123,26 +123,24 @@ export async function MimoFreeAuthPlugin(_input: PluginInput): Promise<Hooks> {
   return {
     config: async (input) => {
       input.provider ??= {}
-      input.provider.mimo ??= {
-        name: "MiMo Auto (free)",
-        npm: "@ai-sdk/openai-compatible",
-        api: CHAT_BASE_URL,
-        options: {
-          apiKey: "anonymous",
-          fetch: wrappedFetch,
-        },
-        models: {
-          "mimo-auto": {
-            name: "MiMo Auto",
-            attachment: true,
-            reasoning: true,
-            tool_call: true,
-            temperature: true,
-            modalities: { input: ["text", "image"], output: ["text"] },
-            limit: { context: 1_000_000, output: 128_000 },
-            cost: { input: 0, output: 0 },
-          },
-        },
+      input.provider.mimo ??= {}
+      const mimo = input.provider.mimo
+      mimo.name ??= "MiMo Auto (free)"
+      mimo.npm ??= "@ai-sdk/openai-compatible"
+      mimo.api ??= CHAT_BASE_URL
+      mimo.options ??= {}
+      mimo.options.apiKey ??= "anonymous"
+      mimo.options.fetch ??= wrappedFetch
+      mimo.models ??= {}
+      mimo.models["mimo-auto"] ??= {
+        name: "MiMo Auto",
+        attachment: true,
+        reasoning: true,
+        tool_call: true,
+        temperature: true,
+        modalities: { input: ["text", "image"], output: ["text"] },
+        limit: { context: 1_000_000, output: 128_000 },
+        cost: { input: 0, output: 0 },
       }
       input.disabled_providers ??= []
       for (const id of ["opencode", "opencode-go"]) {

@@ -1,3 +1,4 @@
+- 全程使用中文进行交流，所有对话、解释和注释一律使用中文。
 - Always use superpowers skill instead of builtin plan mode.
 - To regenerate the JavaScript SDK, run `./packages/sdk/js/script/build.ts`.
 - To regenerate the full SDK (JS + OpenAPI), run `./script/generate.ts`.

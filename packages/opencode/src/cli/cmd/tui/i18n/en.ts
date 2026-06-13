@@ -244,6 +244,115 @@ export const dict: Record<string, string> = {
   "tui.dialog.prompt.processing": "processing...",
   "tui.dialog.prompt.submit_key": "enter",
   "tui.dialog.prompt.submit_action": "submit",
+  // Dialog message actions
+  "tui.dialog.message.title": "Message Actions",
+  "tui.dialog.message.revert.title": "Revert",
+  "tui.dialog.message.revert.description": "undo messages and file changes",
+  "tui.dialog.message.copy.title": "Copy",
+  "tui.dialog.message.copy.description": "message text to clipboard",
+  "tui.dialog.message.fork.title": "Fork",
+  "tui.dialog.message.fork.description": "create a new session",
+
+  // Question prompt
+  "tui.question.answer.placeholder": "Type your own answer",
+
+  // Permission dialog
+  "tui.permission.title": "Permission required",
+  "tui.permission.allow_once": "Allow once",
+  "tui.permission.allow_always": "Allow always",
+  "tui.permission.reject": "Reject",
+  "tui.permission.reject.title": "Reject permission",
+  "tui.permission.reject.placeholder": "Tell MiMoCode what to do differently",
+  "tui.permission.reject.confirm": "confirm",
+  "tui.permission.reject.cancel": "cancel",
+
+  // MCP sidebar
+  "tui.mcp.label": "MCP",
+  "tui.mcp.connected": "Connected",
+  "tui.mcp.pending": "Pending approval",
+  "tui.mcp.disabled": "Disabled",
+  "tui.mcp.needs_auth": "Needs auth",
+  "tui.mcp.needs_client_id": "Needs client ID",
+  "tui.mcp.active_count": "active",
+  "tui.mcp.error_count": "error",
+  "tui.mcp.error_count_plural": "errors",
+
+  // Status dialog
+  "tui.status.title": "Status",
+  "tui.status.no_mcp": "No MCP Servers",
+  "tui.status.mcp_count": "{{count}} MCP Servers",
+  "tui.status.connected": "Connected",
+  "tui.status.pending": "Pending approval",
+  "tui.status.disabled_config": "Disabled in configuration",
+  "tui.status.needs_auth": "Needs authentication (run: opencode mcp auth {{key}})",
+  "tui.status.no_lsp": "No LSP Servers",
+  "tui.status.lsp_count": "{{count}} LSP Servers",
+  "tui.status.no_formatters": "No Formatters",
+  "tui.status.formatter_count": "{{count}} Formatters",
+  "tui.status.no_plugins": "No Plugins",
+  "tui.status.plugin_count": "{{count}} Plugins",
+
+  // Sidebar footer
+  "tui.sidebar.getting_started": "Getting started",
+  "tui.sidebar.free_models_desc": "MiMoCode includes free models so you can start immediately.",
+  "tui.sidebar.connect_providers_desc": "Connect from 75+ providers to use other models, including Claude, GPT, Gemini etc",
+  "tui.sidebar.connect_provider": "Connect provider",
+
+  // Error component
+  "tui.error.report_issue": "Please report an issue.",
+  "tui.error.copy_url": "Copy issue URL (exception info pre-filled)",
+  "tui.error.copied": "Successfully copied",
+  "tui.error.fatal": "A fatal error occurred!",
+  "tui.error.reset_tui": "Reset TUI",
+  "tui.error.exit": "Exit",
+
+  // Skill dialog
+  "tui.dialog.skill.title": "Skills",
+  "tui.dialog.skill.placeholder": "Search skills...",
+
+  // Provider dialog
+  "tui.dialog.provider.code.placeholder": "Authorization code",
+  "tui.dialog.provider.code.invalid": "Invalid code",
+  "tui.dialog.provider.api.placeholder": "API key",
+  "tui.dialog.provider.api.description.opencode": "OpenCode Zen gives you access to all the best coding models at the cheapest prices with a single API key.",
+  "tui.dialog.provider.api.description.opencode-go": "OpenCode Go is a $10 per month subscription that provides reliable access to popular open coding models with generous usage limits.",
+  "tui.dialog.provider.auto.waiting": "Waiting for authorization...",
+  "tui.dialog.provider.auto.copy": "copy",
+
+
+  // Plugin UI
+  "tui.plugins.view.title": "Plugins",
+  "tui.plugins.view.toggle": "toggle",
+  "tui.plugins.view.install": "install",
+  "tui.plugins.install.title": "Install plugin",
+  "tui.plugins.install.placeholder": "npm package name",
+  "tui.plugins.install.busy": "Installing plugin...",
+  "tui.plugins.scope": "scope:",
+  "tui.plugins.scope_global": "global",
+  "tui.plugins.scope_local": "local",
+  "tui.plugins.toast.name_required": "Plugin package name is required",
+  "tui.plugins.toast.check_registry": "Check npm registry/auth settings and try again.",
+  "tui.plugins.toast.installed": "Installed {{mod}} ({{scope}}: {{dir}})",
+  "tui.plugins.toast.no_tui_target": "Package has no TUI target to load in this app.",
+  "tui.plugins.toast.load_failed": "Installed plugin, but runtime load failed. See console/logs; restart TUI to retry.",
+  "tui.plugins.toast.loaded": "Loaded {{mod}} in current session.",
+  "tui.plugins.category_internal": "Internal",
+  "tui.plugins.category_external": "External",
+  "tui.plugins.state.disabled": "disabled",
+  "tui.plugins.state.active": "active",
+  "tui.plugins.state.inactive": "inactive",
+  "tui.plugins.meta.builtin_long": "Built-in plugin",
+  "tui.plugins.meta.builtin": "Built-in",
+  "tui.plugins.scope.toggle": "({{key}} toggle)",
+
+  // Prompt hint
+  "tui.prompt.hint.esc": "esc",
+  "tui.prompt.hint.interrupt": "interrupt",
+  "tui.prompt.hint.interrupt_again": "again to interrupt",
+
+  // Message status
+  "tui.message.interrupted": "interrupted",
+
   "tui.dialog.export.title": "Export Options",
   "tui.dialog.export.filename": "Filename:",
   "tui.dialog.export.filename_placeholder": "Enter filename",

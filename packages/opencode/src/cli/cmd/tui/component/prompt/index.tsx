@@ -1773,9 +1773,9 @@ export function Prompt(props: PromptProps) {
                 </box>
               </box>
               <text fg={store.interrupt > 0 ? theme.primary : theme.text}>
-                esc{" "}
+                {t("tui.prompt.hint.esc")}{" "}
                 <span style={{ fg: store.interrupt > 0 ? theme.primary : theme.textMuted }}>
-                  {store.interrupt > 0 ? "again to interrupt" : "interrupt"}
+                  {store.interrupt > 0 ? t("tui.prompt.hint.interrupt_again") : t("tui.prompt.hint.interrupt")}
                 </span>
               </text>
             </box>
