@@ -42,3 +42,12 @@ tsconfig.tsbuildinfo
 experiment/*.log
 experiment/last-outcome.json
 /experiment
+
+# Dev/test home directories (contain runtime db, logs, cache)
+packages/test_dev_home*
+test_migration.db
+
+# Other dev/temp artifacts
+.atomcode/
+temp_ghostty/
+fix_hosts.ps1
