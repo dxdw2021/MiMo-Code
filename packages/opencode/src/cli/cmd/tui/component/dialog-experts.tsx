@@ -25,7 +25,6 @@ interface ManifestData {
 
 // 从源码路径推断项目根目录（TUI 以 --cwd packages/opencode 运行，process.cwd() 不可靠）
 const SRC_DIR = typeof import.meta !== "undefined" && import.meta.dir ? import.meta.dir : ""
-// dialog-experts.tsx → component → tui → cmd → cli → src → opencode → packages → root
 const ROOT_DIR = SRC_DIR ? path.resolve(SRC_DIR, "../../../../../../") : ""
 const MANIFEST_PATH = ROOT_DIR ? path.join(ROOT_DIR, "experts", "manifest.json") : ""
 
@@ -40,49 +39,42 @@ async function loadExperts(): Promise<ManifestData | null> {
   }
 }
 
-// ── 第一步：选择分类 ──────────────────────────────
+// ── 单层专家列表（可搜索，按分类分组）───────────────
 
-function DialogCategorySelect(props: { data: ManifestData; onSelect: (categoryId: string) => void }) {
-  const { t, effective } = useLanguage()
-  const locale = createMemo(() => (effective() === "zh" || effective() === "zht" ? "zh" : "en"))
-  const options = createMemo(() => {
-    const l = locale()
-    return props.data.categories.map((cat) => ({
-      title: cat.name[l as keyof typeof cat.name] as string,
-      value: cat.id,
-      description: cat.description[l as keyof typeof cat.description] as string,
-    }))
-  })
-  return (
-    <DialogSelect
-      title={t("tui.dialog.experts.select_category")}
-      options={options()}
-      onSelect={(opt) => props.onSelect(opt.value)}
-    />
-  )
-}
-
-// ── 第二步：选择专家 ──────────────────────────────
-
-function DialogExpertSelect(props: { data: ManifestData; categoryId: string }) {
+export function DialogExperts() {
   const dialog = useDialog()
   const { t, effective } = useLanguage()
   const promptRef = usePromptRef()
+  const [data] = createResource(loadExperts)
+
   const locale = createMemo(() => (effective() === "zh" || effective() === "zht" ? "zh" : "en"))
 
-  const options = createMemo(() => {
+  const catNames = createMemo(() => {
+    const d = data()
+    if (!d) return {} as Record<string, string>
     const l = locale()
-    return props.data.experts
-      .filter((ex) => ex.categoryId === props.categoryId)
-      .map((ex) => ({
-        title: `${(ex.displayName[l as keyof typeof ex.displayName] as string) || ex.id} — ${(ex.profession[l as keyof typeof ex.profession] as string) || ""}`,
-        value: ex.id,
-        description: (ex.description[l as keyof typeof ex.description] as string)?.slice(0, 80),
-      }))
+    const m: Record<string, string> = {}
+    for (const c of d.categories) m[c.id] = (c.name[l as keyof typeof c.name] as string) || c.id
+    return m
+  })
+
+  const options = createMemo(() => {
+    const d = data()
+    if (!d) return []
+    const l = locale()
+    return d.experts.map((ex) => ({
+      title: `${(ex.displayName[l as keyof typeof ex.displayName] as string) || ex.id} — ${(ex.profession[l as keyof typeof ex.profession] as string) || ""}`,
+      value: ex.id,
+      description: (ex.description[l as keyof typeof ex.description] as string)?.slice(0, 80),
+      category: catNames()[ex.categoryId] || "",
+      _expert: ex,
+    }))
   })
 
   function onSelect(opt: { value: string }) {
-    const expert = props.data.experts.find((ex) => ex.id === opt.value)
+    const d = data()
+    if (!d) return
+    const expert = d.experts.find((ex) => ex.id === opt.value)
     if (!expert) return
     const l = locale()
     const defaultPrompt = expert.defaultInitPrompt?.[l as keyof typeof expert.defaultInitPrompt] as string | undefined
@@ -105,41 +97,18 @@ function DialogExpertSelect(props: { data: ManifestData; categoryId: string }) {
   }
 
   return (
-    <DialogSelect
-      title={t("tui.dialog.experts.select_expert")}
-      options={options()}
-      onSelect={onSelect}
-    />
-  )
-}
-
-// ── 入口 ────────────────────────────────────
-
-export function DialogExperts() {
-  const dialog = useDialog()
-  const { t } = useLanguage()
-  const [data] = createResource(loadExperts)
-
-  function onCategoryChosen(categoryId: string) {
-    const d = data()
-    if (!d) return
-    dialog.replace(() => <DialogExpertSelect data={d} categoryId={categoryId} />)
-  }
-
-  return (
     <Show when={data() !== undefined} fallback={
-      <DialogSelect
-        title={t("tui.dialog.experts.select_category")}
-        options={[{ title: "正在加载专家数据...", value: "", disabled: true }]}
-      />
+      <DialogSelect title={t("tui.dialog.experts.select_category")} options={[{ title: "正在加载专家数据...", value: "", disabled: true }]} />
     }>
-      <Show when={data() !== null} fallback={
+      <Show when={data() !== null && options().length > 0} fallback={
+        <DialogSelect title={t("tui.dialog.experts.select_category")} options={[{ title: "⚠️ 未找到专家数据", value: "", disabled: true }]} />
+      }>
         <DialogSelect
           title={t("tui.dialog.experts.select_category")}
-          options={[{ title: "⚠️ 未找到专家数据", value: "", disabled: true }]}
+          options={options()}
+          onSelect={onSelect}
+          flat={true}
         />
-      }>
-        <DialogCategorySelect data={data()!} onSelect={onCategoryChosen} />
       </Show>
     </Show>
   )
