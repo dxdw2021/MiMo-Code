@@ -34,6 +34,7 @@ import { DialogWorktree } from "@tui/component/dialog-worktree"
 import { DialogThemeList } from "@tui/component/dialog-theme-list"
 import { DialogImageList } from "@tui/component/dialog-image-list"
 import { DialogLogoDesign } from "@tui/component/dialog-logo-design"
+import { DialogExperts } from "@tui/component/dialog-experts"
 import { DialogHelp } from "./ui/dialog-help"
 import { CommandProvider, useCommandDialog } from "@tui/component/dialog-command"
 import { DialogAgent } from "@tui/component/dialog-agent"
@@ -721,6 +722,18 @@ function App(props: { onSnapshot?: () => Promise<string[]> }) {
       },
       onSelect: () => {
         dialog.replace(() => <DialogImageList />)
+      },
+      category: "system",
+    },
+    {
+      title: t("tui.command.experts.switch.title"),
+      value: "experts.list",
+      slash: {
+        name: "expert",
+        aliases: ["experts"],
+      },
+      onSelect: () => {
+        dialog.replace(() => <DialogExperts />)
       },
       category: "system",
     },

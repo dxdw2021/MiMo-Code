@@ -239,6 +239,12 @@ export const dict: Record<string, string> = {
   "tui.dialog.image.solid": "Solid color",
   "tui.dialog.image.solid.prompt": "Enter hex color (e.g. #1a1b26)",
   "tui.dialog.image.solid.invalid": "Invalid hex color",
+
+  // Expert dialog
+  "tui.command.experts.switch.title": "Expert marketplace",
+  "tui.dialog.experts.select_category": "Select expert category",
+  "tui.dialog.experts.select_expert": "Select an expert",
+
   "tui.command.logo.switch.title": "Switch logo design",
   "tui.dialog.logo.title": "Logo design",
   "tui.dialog.logo.option.classic": "Classic (bold)",

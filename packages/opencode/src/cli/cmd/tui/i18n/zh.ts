@@ -221,6 +221,12 @@ export const dict = {
   "tui.dialog.image.solid.prompt": "输入十六进制颜色（如 #1a1b26）",
   "tui.dialog.image.solid.invalid": "无效的颜色值",
   "tui.dialog.image.starry": "星空",
+
+  // Expert dialog
+  "tui.command.experts.switch.title": "专家市场",
+  "tui.dialog.experts.select_category": "选择专家分类",
+  "tui.dialog.experts.select_expert": "选择专家",
+
   "tui.dialog.image.fire": "火焰",
   "tui.dialog.image.snow": "飘雪",
   "tui.dialog.image.rain": "下雨",
