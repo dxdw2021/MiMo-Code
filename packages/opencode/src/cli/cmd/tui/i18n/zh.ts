@@ -570,6 +570,11 @@ export const dict = {
 
   // Errors & notifications
   "tui.error.fork_failed": "派生会话失败",
+  "tui.error.too_many_requests": "请求过多",
+  "tui.error.provider_overloaded": "服务商负载过高",
+  "tui.error.rate_limited": "请求频率受限",
+  "tui.error.transient_network": "临时网络错误",
+  "tui.error.retry_title": "重试错误",
   "tui.heap_snapshot.written": "堆快照已写入 {{files}}",
   "tui.session.deleted": "当前会话已删除",
   "tui.update.available.title": "有可用更新",

@@ -406,6 +406,11 @@ export const dict = {
 
   // Errors & notifications
   "tui.error.fork_failed": "分叉工作階段失敗",
+  "tui.error.too_many_requests": "請求過多",
+  "tui.error.provider_overloaded": "服務商負載過高",
+  "tui.error.rate_limited": "請求頻率受限",
+  "tui.error.transient_network": "臨時網路錯誤",
+  "tui.error.retry_title": "重試錯誤",
   "tui.heap_snapshot.written": "堆積快照已寫入 {{files}}",
   "tui.session.deleted": "目前工作階段已刪除",
   "tui.update.available.title": "有可用更新",

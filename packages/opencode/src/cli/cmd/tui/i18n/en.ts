@@ -577,6 +577,11 @@ export const dict: Record<string, string> = {
 
   // Errors & notifications
   "tui.error.fork_failed": "Failed to fork session",
+  "tui.error.too_many_requests": "Too Many Requests",
+  "tui.error.provider_overloaded": "Provider is overloaded",
+  "tui.error.rate_limited": "Rate Limited",
+  "tui.error.transient_network": "Transient network error",
+  "tui.error.retry_title": "Retry Error",
   "tui.heap_snapshot.written": "Heap snapshot written to {{files}}",
   "tui.session.deleted": "The current session was deleted",
   "tui.update.available.title": "Update Available",

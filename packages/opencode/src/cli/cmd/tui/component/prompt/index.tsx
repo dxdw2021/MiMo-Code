@@ -1742,11 +1742,18 @@ export function Prompt(props: PromptProps) {
                         clearInterval(timer)
                       })
                     })
+                    const retryMessageMap: Record<string, string> = {
+                      "Too Many Requests": t("tui.error.too_many_requests"),
+                      "Provider is overloaded": t("tui.error.provider_overloaded"),
+                      "Rate Limited": t("tui.error.rate_limited"),
+                      "Transient network error": t("tui.error.transient_network"),
+                    }
+                    const translateRetryMessage = (msg: string) => retryMessageMap[msg] ?? msg
                     const handleMessageClick = () => {
                       const r = retry()
                       if (!r) return
                       if (isTruncated()) {
-                        void DialogAlert.show(dialog, "Retry Error", r.message)
+                        void DialogAlert.show(dialog, t("tui.error.retry_title"), translateRetryMessage(r.message))
                       }
                     }
 
