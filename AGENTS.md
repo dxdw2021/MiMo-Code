@@ -32,16 +32,23 @@
 
 ## Repo structure
 
-- `packages/opencode`: Core CLI, server, and all business logic. Entry: `src/index.ts` (yargs CLI, script name `mimo`).
-- `packages/app`: Web UI, SolidJS + Vite.
-- `packages/desktop`: Native desktop app, Electron (wraps `packages/app`).
-- `packages/ui`: Shared UI components, SolidJS.
-- `packages/shared`: `@mimo-ai/shared` — utilities shared across packages.
-- `packages/sdk/js`: `@mimo-ai/sdk` — generated JS client from OpenAPI.
-- `packages/console`: Console sub-app (multi-service under `packages/console/*`).
-- `packages/plugin`, `packages/script`, `packages/function`, `packages/identity`: Internal workspace packages.
-- `infra/`: SST infrastructure (Cloudflare + Stripe + PlanetScale).
-- `script/`: Repo-level scripts (generate, release, changelog, etc.).
+- `packages/opencode`: Core CLI, server, and all business logic. Entry: `src/index.ts` (yargs CLI, script name `mimo`).子包内有独立 `AGENTS.md` 提供更详细的 Effect/模块约定。
+- `packages/app`: Web UI, SolidJS + Vite。子包内有独立 `AGENTS.md`。
+- `packages/desktop`: Native desktop app, Electron (wraps `packages/app`)。子包内有独立 `AGENTS.md`。
+- `packages/ui`: Shared UI components, SolidJS。
+- `packages/shared`: `@mimo-ai/shared` — utilities shared across packages。
+- `packages/sdk/js`: `@mimo-ai/sdk` — generated JS client from OpenAPI。
+- `packages/console`: Console sub-app (multi-service: `console/app`, `console/core`, `console/function`, `console/mail`, `console/resource`)。
+- `packages/plugin`: `@mimo-ai/plugin` — plugin API definitions (tool/tui)。
+- `packages/script`: `@mimo-ai/script` — build/release scripts。
+- `packages/function`: `@mimo-ai/function` — Cloudflare Workers functions (GitHub integration)。
+- `packages/storybook`: UI 组件 Storybook。
+- `packages/slack`: Slack 集成。
+- `packages/identity`: Logo 资源（非代码包）。
+- `packages/enterprise`: 企业版功能。
+- `packages/extensions`: 扩展功能。
+- `infra/`: SST infrastructure (Cloudflare + Stripe + PlanetScale)。
+- `script/`: Repo-level scripts (generate, release, changelog, etc.)。
 
 ## Commands
 
@@ -253,3 +260,13 @@ const table = sqliteTable("session", {
 
 - Typecheck workflow: `.github/workflows/typecheck.yml` — runs `bun typecheck` on push/PR to `dev`.
 - Pre-push hook: `.husky/pre-push` — validates bun version + runs `bun typecheck`.
+
+## 子包 AGENTS.md
+
+各子包内有独立 `AGENTS.md`，提供更细粒度的约束。关键约束摘录：
+
+- **app** (`packages/app/AGENTS.md`)：永远不要尝试重启 app 或 server 进程。本地开发时 backend 跑 4096 端口、app 跑 4444 端口，通过 `http://localhost:4444` 验证 UI 改动。
+- **desktop** (`packages/desktop/AGENTS.md`)：渲染进程只能调用 `src/preload` 导出的 `window.api`；主进程在 `src/main/ipc.ts` 注册 IPC handler。
+- **opencode** (`packages/opencode/AGENTS.md`)：详细的 Effect/InstanceState/Runtime 约束、模块 shape、数据库 schema 规范。
+
+修改子包代码时，务必阅读对应子包的 `AGENTS.md`。
