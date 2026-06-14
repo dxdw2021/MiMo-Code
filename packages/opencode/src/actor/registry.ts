@@ -355,9 +355,10 @@ export const layer: Layer.Layer<Service, never, Bus.Service> = Layer.effect(
     )
     log.info("orphan recovery complete")
 
-    // --- Stuck Detection ---
+    // --- Stuck Detection & Auto-Termination ---
     const scanStuck = Effect.gen(function* () {
-      const cutoff = Date.now() - STUCK_THRESHOLD_MS
+      const now = Date.now()
+      const cutoff = now - STUCK_THRESHOLD_MS
       const stuck = yield* Effect.sync(() =>
         Database.use((db) =>
           db
@@ -374,13 +375,29 @@ export const layer: Layer.Layer<Service, never, Bus.Service> = Layer.effect(
       )
       for (const row of stuck) {
         const entry = fromRow(row)
+        const stuckDuration = now - entry.lastTurnTime
         yield* bus.publish(Events.ActorStuck, {
           sessionID: entry.sessionID,
           actorID: entry.actorID,
           description: entry.description,
           lastTurnTime: entry.lastTurnTime,
-          stuckDuration: Date.now() - entry.lastTurnTime,
+          stuckDuration,
         })
+        // Auto-terminate actors stuck longer than 2× threshold (10 min).
+        // This prevents infinite stuck-event loops when an actor's cleanup
+        // path fails (e.g. LLM retry exhaustion not propagated to status).
+        if (stuckDuration > STUCK_THRESHOLD_MS * 2) {
+          log.warn("auto-terminating stuck actor", {
+            actorID: entry.actorID,
+            sessionID: entry.sessionID,
+            stuckDuration,
+          })
+          yield* updateStatus(entry.sessionID, entry.actorID, {
+            status: "idle",
+            lastOutcome: "failure",
+            lastError: `auto-terminated: stuck ${Math.floor(stuckDuration / 1000)}s`,
+          }).pipe(Effect.ignore)
+        }
       }
     })
 

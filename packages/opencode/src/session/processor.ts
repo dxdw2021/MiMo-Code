@@ -721,6 +721,7 @@ export const layer: Layer.Layer<
                         next: info.next,
                       })
                     : Effect.void,
+                maxAttempts: 3,
               }),
             ),
             Effect.catch(halt),
