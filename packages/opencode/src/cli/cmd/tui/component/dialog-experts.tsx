@@ -25,7 +25,7 @@ interface ManifestData {
 
 // 从源码路径推断项目根目录（TUI 以 --cwd packages/opencode 运行，process.cwd() 不可靠）
 const SRC_DIR = typeof import.meta !== "undefined" && import.meta.dir ? import.meta.dir : ""
-const ROOT_DIR = SRC_DIR ? path.resolve(SRC_DIR, "../../../../../../") : ""
+const ROOT_DIR = SRC_DIR ? path.resolve(SRC_DIR, "../../../../../../../") : ""
 const MANIFEST_PATH = ROOT_DIR ? path.join(ROOT_DIR, "experts", "manifest.json") : ""
 
 async function loadExperts(): Promise<ManifestData | null> {
