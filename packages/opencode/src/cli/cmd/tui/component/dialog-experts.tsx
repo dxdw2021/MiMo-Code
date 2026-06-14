@@ -4,7 +4,7 @@ import { useLanguage } from "../context/language"
 import { DialogSelect } from "../ui/dialog-select"
 import { DialogPrompt } from "../ui/dialog-prompt"
 import { usePromptRef } from "../context/prompt"
-import process from "process"
+import path from "path"
 
 // ── 数据结构 ──────────────────────────────────
 
@@ -23,33 +23,15 @@ interface ManifestData {
   experts: ExpertItem[]
 }
 
-// 同步查找有效路径（纯路径拼接，不读取文件）
-function findManifestPath(): string {
-  const cwd = process.cwd()
-  const candidates = [
-    cwd + "/experts/manifest.json",
-  ]
-  // 尝试从 import.meta.dir 推断
-  try {
-    const dir = (typeof import.meta !== "undefined" && (import.meta as any).dir) as string | undefined
-    if (dir) {
-      candidates.push(dir.split("\\").slice(0, -7).join("\\") + "\\experts\\manifest.json")
-    }
-  } catch {}
-  // 返回第一个存在的文件
-  for (const p of candidates) {
-    try {
-      const f = Bun.file(p)
-      if (f.size > 0) return p
-    } catch {}
-  }
-  return candidates[0]
-}
-
-const MANIFEST_PATH = findManifestPath()
+// 从源码路径推断项目根目录（TUI 以 --cwd packages/opencode 运行，process.cwd() 不可靠）
+const SRC_DIR = typeof import.meta !== "undefined" && import.meta.dir ? import.meta.dir : ""
+// dialog-experts.tsx → component → tui → cmd → cli → src → opencode → packages → root
+const ROOT_DIR = SRC_DIR ? path.resolve(SRC_DIR, "../../../../../../") : ""
+const MANIFEST_PATH = ROOT_DIR ? path.join(ROOT_DIR, "experts", "manifest.json") : ""
 
 async function loadExperts(): Promise<ManifestData | null> {
   try {
+    if (!MANIFEST_PATH) return null
     const file = Bun.file(MANIFEST_PATH)
     if (file.size === 0) return null
     return await file.json() as ManifestData
