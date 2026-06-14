@@ -89,7 +89,13 @@ export function DialogExperts() {
       if (!text) return
       const ref = promptRef.current
       if (ref) {
-        ref.set({ input: text, parts: ref.current.parts })
+        const role = (expert.profession[l as keyof typeof expert.profession] as string) || ""
+        const desc = (expert.description[l as keyof typeof expert.description] as string) || ""
+        // 构造专家上下文消息，让 AI 扮演该专家角色
+        const input = `我需要你以${role}的身份协助我。${desc}\n\n我的需求：${text}`
+        ref.set({ input, parts: [] })
+        // 立即提交消息，调用 AI 响应
+        setTimeout(() => ref.submit(), 100)
       }
       dialog.clear()
     })
