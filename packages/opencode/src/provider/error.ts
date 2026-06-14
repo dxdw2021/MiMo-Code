@@ -25,6 +25,8 @@ const OVERFLOW_PATTERNS = [
   /prompt too long; exceeded (?:max )?context length/i, // Ollama explicit overflow error
   /too large for model with \d+ maximum context length/i, // Mistral
   /model_context_window_exceeded/i, // z.ai non-standard finish_reason surfaced as error text
+  /exceeded max_prompt_tokens/i, // SiliconFlow (code 20015)
+  /number of input tokens.*exceeded/i, // General token-count overflow
 ]
 
 function isOpenAiErrorRetryable(e: APICallError) {
