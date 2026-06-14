@@ -362,15 +362,25 @@ export function Autocomplete(props: {
       )
   })
 
+  const COMMAND_DESC_KEYS: Record<string, string> = {
+    init: "tui.command.desc.init",
+    review: "tui.command.desc.review",
+    dream: "tui.command.desc.dream",
+    distill: "tui.command.desc.distill",
+    goal: "tui.command.desc.goal",
+    "deep-research": "tui.command.desc.deep-research",
+  }
+
   const commands = createMemo((): AutocompleteOption[] => {
     const results: AutocompleteOption[] = [...command.slashes()]
 
     for (const serverCommand of sync.data.command) {
       if (serverCommand.source === "skill") continue
       const label = serverCommand.source === "mcp" ? ":mcp" : ""
+      const descKey = COMMAND_DESC_KEYS[serverCommand.name]
       results.push({
         display: "/" + serverCommand.name + label,
-        description: serverCommand.description,
+        description: descKey ? lang.t(descKey) : serverCommand.description,
         onSelect: () => {
           const newText = "/" + serverCommand.name + " "
           const cursor = props.input().logicalCursor

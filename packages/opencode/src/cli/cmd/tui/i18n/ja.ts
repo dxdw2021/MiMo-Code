@@ -218,6 +218,7 @@ export const dict = {
   "tui.command.never_ask.toast_on":
     "質問しないをオンにしました — あなたに質問せず、オフにする（/never-ask-questions）まで自分で最適な選択肢を選びます。権限リクエストは引き続きあなたの承認が必要です。",
   "tui.command.never_ask.toast_off": "質問しないをオフにしました — 判断ポイントで再びあなたに質問します。",
+  "tui.never_ask.badge": "質問しない：ON",
   "tui.command.agent.cycle.title": "エージェントを循環",
   "tui.command.variant.cycle.title": "バリアントを循環",
   "tui.command.variant.list.title": "モデルバリアントを切り替え",
@@ -280,6 +281,9 @@ export const dict = {
   "tui.command.app.toggle.diffwrap.disable": "diff の折り返しを無効化",
   "tui.command.app.toggle.diffwrap.enable": "diff の折り返しを有効化",
   "tui.command.logout.toast": "ログアウトしました",
+  "tui.command.config.reload.title": "設定を再読み込み",
+  "tui.command.config.reload.description": "プロジェクト設定、プロバイダー、プラグインを再読み込み",
+  "tui.command.config.reload.toast": "設定を再読み込みしました",
 
   // Session-level commands
   "tui.command.session.share.title": "セッションを共有",

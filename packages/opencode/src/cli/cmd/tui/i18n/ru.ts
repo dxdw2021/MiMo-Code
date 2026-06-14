@@ -280,6 +280,7 @@ export const dict = {
   "tui.command.never_ask.toast_on":
     "Без вопросов ВКЛ — я не буду спрашивать; сам выберу лучший вариант, пока вы не выключите (/never-ask-questions). Запросы разрешений по-прежнему требуют вашего подтверждения.",
   "tui.command.never_ask.toast_off": "Без вопросов ВЫКЛ — я снова буду спрашивать вас в точках принятия решений.",
+  "tui.never_ask.badge": "Без вопросов: ВКЛ",
   "tui.command.agent.cycle.title": "Цикл агентов",
   "tui.command.variant.cycle.title": "Цикл вариантов",
   "tui.command.variant.list.title": "Сменить вариант модели",
@@ -343,6 +344,9 @@ export const dict = {
   "tui.command.app.toggle.diffwrap.disable": "Отключить перенос строк в diff",
   "tui.command.app.toggle.diffwrap.enable": "Включить перенос строк в diff",
   "tui.command.logout.toast": "Вы вышли из аккаунта",
+  "tui.command.config.reload.title": "Перезагрузить конфиг",
+  "tui.command.config.reload.description": "Перезагрузить конфигурацию проекта, провайдеров и плагины",
+  "tui.command.config.reload.toast": "Конфиг перезагружен",
 
   // Session-level commands
   "tui.command.session.share.title": "Поделиться сессией",

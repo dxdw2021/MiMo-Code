@@ -10,6 +10,7 @@ import { useKeybind } from "../context/keybind"
 import { useSDK } from "../context/sdk"
 import { useToast, type ToastContext } from "../ui/toast"
 import { DialogPrompt } from "../ui/dialog-prompt"
+import { useLanguage } from "@tui/context/language"
 import * as fuzzysort from "fuzzysort"
 
 const ADD_MODEL_SENTINEL = "__add_model__"
@@ -28,6 +29,7 @@ export function DialogModel(props: { providerID?: string }) {
   const sdk = useSDK()
   const toast = useToast()
   const keybind = useKeybind()
+  const t = useLanguage().t
   const [query, setQuery] = createSignal("")
 
   const connected = useConnected()
@@ -111,19 +113,18 @@ export function DialogModel(props: { providerID?: string }) {
             (x) => x.title,
           ),
         )
-        if (provider.source !== "config") return models
         if (props.providerID && props.providerID !== provider.id) return models
         return [
           ...models,
           {
             value: { providerID: provider.id, modelID: ADD_MODEL_SENTINEL },
-            title: "+ Add model",
+            title: t("tui.dialog.model.add_model"),
             description: undefined,
             category: connected() ? provider.name : undefined,
             disabled: false,
             footer: undefined as "Free" | undefined,
             onSelect() {
-              void runAddModelWizard({ dialog, sdk, sync, toast, providerID: provider.id })
+              void runAddModelWizard({ dialog, sdk, sync, toast, providerID: provider.id, t })
             },
           },
         ]
@@ -157,7 +158,7 @@ export function DialogModel(props: { providerID?: string }) {
 
   const title = createMemo(() => {
     const value = provider()
-    if (!value) return "Select model"
+    if (!value) return t("tui.dialog.model.select_model")
     return value.name
   })
 
@@ -182,14 +183,14 @@ export function DialogModel(props: { providerID?: string }) {
       keybind={[
         {
           keybind: keybind.all.model_provider_list?.[0],
-          title: connected() ? "Connect provider" : "View all providers",
+          title: connected() ? t("tui.dialog.model.connect_provider") : t("tui.dialog.model.view_all_providers"),
           onTrigger() {
             dialog.replace(() => <DialogProvider />)
           },
         },
         {
           keybind: keybind.all.model_favorite_toggle?.[0],
-          title: "Favorite",
+          title: t("tui.dialog.model.favorite"),
           disabled: !connected(),
           onTrigger: (option) => {
             const v = option.value as { providerID: string; modelID: string }
@@ -212,20 +213,21 @@ async function runAddModelWizard(opts: {
   sdk: ReturnType<typeof useSDK>
   sync: ReturnType<typeof useSync>
   toast: ToastContext
+  t: ReturnType<typeof useLanguage>["t"]
   providerID: string
 }) {
-  const { dialog, sdk, sync, toast, providerID } = opts
+  const { dialog, sdk, sync, toast, t, providerID } = opts
 
   function step(n: number, total: number, title: string, placeholder?: string, value?: string) {
     return DialogPrompt.show(dialog, `${title} (${n}/${total})`, { placeholder, value })
   }
 
-  const modelIDRaw = await step(1, 2, "Model id", "gateway model id")
+  const modelIDRaw = await step(1, 2, t("tui.dialog.model.add_wizard.model_id"), t("tui.dialog.model.add_wizard.model_id_placeholder"))
   if (modelIDRaw === null) return
   const modelID = modelIDRaw.trim()
   if (!modelID) return
 
-  const modelNameRaw = await step(2, 2, "Display name", "shown in model picker", modelID)
+  const modelNameRaw = await step(2, 2, t("tui.dialog.model.add_wizard.display_name"), t("tui.dialog.model.add_wizard.display_name_placeholder"), modelID)
   if (modelNameRaw === null) return
   const modelName = modelNameRaw.trim() || modelID
 

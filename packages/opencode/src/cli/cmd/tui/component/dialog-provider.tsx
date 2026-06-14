@@ -31,6 +31,7 @@ export function createDialogProviderOptions() {
   const sdk = useSDK()
   const toast = useToast()
   const { theme } = useTheme()
+  const t = useLanguage().t
   const options = createMemo(() => {
     const list = pipe(
       sync.data.provider_next.all,
@@ -66,7 +67,7 @@ export function createDialogProviderOptions() {
                 dialog.replace(
                   () => (
                     <DialogSelect
-                      title="Select auth method"
+                      title={t("tui.dialog.provider.select_auth_method")}
                       options={methods.map((x, index) => ({
                         title: x.label,
                         value: index,
@@ -143,14 +144,14 @@ export function createDialogProviderOptions() {
     return [
       ...list,
       {
-        title: "+ Custom provider",
+        title: t("tui.dialog.provider.custom_provider"),
         value: "__custom__",
         description: undefined,
         footer: undefined,
         category: "Other",
         gutter: undefined,
         async onSelect() {
-          await runCustomProviderWizard({ dialog, sdk, sync, toast })
+          await runCustomProviderWizard({ dialog, sdk, sync, toast, t })
         },
       },
     ]
@@ -159,8 +160,9 @@ export function createDialogProviderOptions() {
 }
 
 export function DialogProvider() {
+  const t = useLanguage().t
   const options = createDialogProviderOptions()
-  return <DialogSelect title="Connect a provider" options={options()} />
+  return <DialogSelect title={t("tui.dialog.provider.connect_title")} options={options()} />
 }
 
 export async function runCustomProviderWizard(opts: {
@@ -168,38 +170,39 @@ export async function runCustomProviderWizard(opts: {
   sdk: ReturnType<typeof useSDK>
   sync: ReturnType<typeof useSync>
   toast: ToastContext
+  t: ReturnType<typeof useLanguage>["t"]
 }) {
-  const { dialog, sdk, sync, toast } = opts
+  const { dialog, sdk, sync, toast, t } = opts
 
   function step(n: number, total: number, title: string, placeholder?: string, value?: string) {
     return DialogPrompt.show(dialog, `${title} (${n}/${total})`, { placeholder, value })
   }
 
-  const providerIDRaw = await step(1, 6, "Provider id", "e.g. mimorouter")
+  const providerIDRaw = await step(1, 6, t("tui.dialog.provider.wizard.provider_id"), t("tui.dialog.provider.wizard.provider_id_placeholder"))
   if (providerIDRaw === null) return
   const providerID = providerIDRaw.trim()
   if (!providerID) return
 
-  const nameRaw = await step(2, 6, "Display name", "e.g. MiMo Router", providerID)
+  const nameRaw = await step(2, 6, t("tui.dialog.provider.wizard.display_name"), t("tui.dialog.provider.wizard.display_name_placeholder"), providerID)
   if (nameRaw === null) return
   const name = nameRaw.trim() || providerID
 
-  const baseURLRaw = await step(3, 6, "Base URL", "https://.../v1")
+  const baseURLRaw = await step(3, 6, t("tui.dialog.provider.wizard.base_url"), t("tui.dialog.provider.wizard.base_url_placeholder"))
   if (baseURLRaw === null) return
   const baseURL = baseURLRaw.trim()
   if (!baseURL) return
 
-  const apiKeyRaw = await step(4, 6, "API key", "sk-...")
+  const apiKeyRaw = await step(4, 6, t("tui.dialog.provider.wizard.api_key"), t("tui.dialog.provider.wizard.api_key_placeholder"))
   if (apiKeyRaw === null) return
   const apiKey = apiKeyRaw.trim()
   if (!apiKey) return
 
-  const modelIDRaw = await step(5, 6, "First model id", "e.g. claude-sonnet-4-6")
+  const modelIDRaw = await step(5, 6, t("tui.dialog.provider.wizard.first_model_id"), t("tui.dialog.provider.wizard.first_model_id_placeholder"))
   if (modelIDRaw === null) return
   const modelID = modelIDRaw.trim()
   if (!modelID) return
 
-  const modelNameRaw = await step(6, 6, "First model name", "e.g. Claude Sonnet 4.6", modelID)
+  const modelNameRaw = await step(6, 6, t("tui.dialog.provider.wizard.first_model_name"), t("tui.dialog.provider.wizard.first_model_name_placeholder"), modelID)
   if (modelNameRaw === null) return
   const modelName = modelNameRaw.trim() || modelID
 

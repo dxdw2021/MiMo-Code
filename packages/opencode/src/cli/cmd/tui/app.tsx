@@ -675,6 +675,21 @@ function App(props: { onSnapshot?: () => Promise<string[]> }) {
       category: "system",
     },
     {
+      title: t("tui.command.config.reload.title"),
+      description: t("tui.command.config.reload.description"),
+      value: "config.reload",
+      slash: {
+        name: "reload",
+        aliases: ["refresh"],
+      },
+      onSelect: async (dialog) => {
+        await sync.bootstrap({ fatal: false })
+        toast.show({ message: t("tui.command.config.reload.toast"), variant: "info" })
+        dialog.clear()
+      },
+      category: "system",
+    },
+    {
       title: t("tui.command.worktree.list.title"),
       value: "worktree.list",
       slash: {

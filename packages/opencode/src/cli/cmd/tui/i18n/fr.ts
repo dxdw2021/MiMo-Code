@@ -265,6 +265,7 @@ export const dict = {
   "tui.command.never_ask.toast_on":
     "Sans questions ACTIVÉ — je ne te demanderai rien ; je choisirai moi-même la meilleure option jusqu'à ce que tu le désactives (/never-ask-questions). Les demandes d'autorisation nécessitent toujours ton approbation.",
   "tui.command.never_ask.toast_off": "Sans questions DÉSACTIVÉ — je te redemanderai aux points de décision.",
+  "tui.never_ask.badge": "Sans questions : ON",
   "tui.command.agent.cycle.title": "Cycle d'agents",
   "tui.command.variant.cycle.title": "Cycle de variantes",
   "tui.command.variant.list.title": "Changer de variante de modèle",
@@ -328,6 +329,9 @@ export const dict = {
   "tui.command.app.toggle.diffwrap.disable": "Désactiver le retour à la ligne des diffs",
   "tui.command.app.toggle.diffwrap.enable": "Activer le retour à la ligne des diffs",
   "tui.command.logout.toast": "Déconnecté",
+  "tui.command.config.reload.title": "Recharger la config",
+  "tui.command.config.reload.description": "Recharger la configuration, les fournisseurs et les plugins",
+  "tui.command.config.reload.toast": "Configuration rechargée",
 
   // Session-level commands
   "tui.command.session.share.title": "Partager la session",

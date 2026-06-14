@@ -16,6 +16,10 @@ import {
 import { Dynamic } from "solid-js/web"
 import path from "path"
 import { useCurrentAgentID, useRoute, useRouteData } from "@tui/context/route"
+import { StarryBackground } from "@tui/component/starry-background"
+import { BackgroundImage } from "@tui/component/background-image"
+import { BUILTIN_BGS, EFFECT_VALUES } from "@tui/component/bg-registry"
+import { SOLID_VALUE } from "@tui/component/dialog-image-list"
 import { useProject } from "@tui/context/project"
 import { useSync } from "@tui/context/sync"
 import { useEvent } from "@tui/context/event"
@@ -1042,8 +1046,32 @@ export function Session() {
   // snap to bottom when session changes
   createEffect(on(() => route.sessionID, toBottom))
 
+  const bgPath = createMemo(() => {
+    const val = kv.get("background_image")
+    if (!val || typeof val !== "string") return undefined
+    if (val === SOLID_VALUE || EFFECT_VALUES.has(val)) return val
+    return path.join(Global.Path.config, "backgrounds", val)
+  })
+
   return (
-    <context.Provider
+    <>
+      <Show when={bgPath() === SOLID_VALUE}>
+        <box position="absolute" top={0} left={0} width="100%" height="100%" zIndex={0} backgroundColor={kv.get("background_color") ?? theme.background} />
+      </Show>
+      <For each={BUILTIN_BGS}>
+        {(bg) => (
+          <Show when={bgPath() === bg.value}>
+            <bg.component />
+          </Show>
+        )}
+      </For>
+      <Show when={bgPath() !== undefined && bgPath() !== SOLID_VALUE && !EFFECT_VALUES.has(bgPath() as string)}>
+        <BackgroundImage path={bgPath()!} />
+      </Show>
+      <Show when={!bgPath()}>
+        <StarryBackground />
+      </Show>
+      <context.Provider
       value={{
         get width() {
           return contentWidth()
@@ -1237,6 +1265,7 @@ export function Session() {
         </Show>
       </box>
     </context.Provider>
+    </>
   )
 }
 
