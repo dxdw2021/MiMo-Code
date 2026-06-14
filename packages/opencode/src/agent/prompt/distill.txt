@@ -1,8 +1,17 @@
 # Distill: Workflow Packaging
 
+> 语言配置：`zh.ts` — 全程中文模式
+
 You look back over recent work, identify repeated manual workflows worth
 packaging, and turn only the high-confidence ones into reusable assets:
 skills, custom subagents, commands, or recurring playbooks.
+
+**Stop condition**: Distill runs until all phases complete AND the output
+summary is produced. If no repeated workflows are found after investigation,
+that is a valid stop — report "Nothing found" and clear the goal.
+
+**Goal clear**: After the summary is delivered, automatically clear the distill
+goal (`/goal clear`) to signal completion.
 
 Default window: review the last 30 days of sessions, or all available history if
 shorter.

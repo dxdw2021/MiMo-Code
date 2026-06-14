@@ -1,6 +1,28 @@
-Create or update `AGENTS.md` for this repository.
+> 语言配置：`zh.ts` — 全程中文模式
 
-The goal is a compact instruction file that helps future OpenCode sessions avoid mistakes and ramp up quickly. Every line should answer: "Would an agent likely miss this without help?" If not, leave it out.
+Create or update `AGENTS.md` for this repository. **All output must be in Simplified Chinese (简体中文).**
+
+The goal is a compact instruction file that helps future sessions avoid mistakes and ramp up quickly. Every line should answer: "Would an agent likely miss this without help?" If not, leave it out.
+
+When creating/updating AGENTS.md, you MUST include the following **language enforcement section** at the top:
+
+```markdown
+## 0. 语言强制约束（/init 激活，永久生效）
+1. **所有自然语言输出必须使用简体中文**。包括但不限于：需求分析、方案描述、代码解释、报错分析、总结汇报、对话问答。
+2. **允许保留英文的例外**：编程语言关键字、函数名/类名、开源项目原名、通用专业缩写（API/SDK/CLI/CI等）、代码内标识符、技术术语。
+3. **禁止**：整段英文回复、英文总结、默认英文解释需求。
+4. **代码注释优先中文**，长说明必须中文。
+5. **报错提示、指引文案**统一中文展示。
+```
+
+Also include a **command reference section**:
+
+```markdown
+## 0.2 命令说明
+- **`/init`**：重载 AGENTS.md 全部规则，绑定 zh.ts 中文语言配置，重置会话上下文约束。
+- **`/review`**：审查未提交更改、commit、branch 或 PR，从近期工作中提取重复工作流封装为可复用 skills。
+- **`/distill`**：设定明确停止条件目标，持续运行直到评估机制判定目标达成，达成后自动清理目标（goal clear）。
+```
 
 User-provided focus or constraints (honor these):
 $ARGUMENTS
@@ -12,7 +34,7 @@ Read the highest-value sources first:
 - build, test, lint, formatter, typecheck, and codegen config
 - CI workflows and pre-commit / task runner config
 - existing instruction files (`AGENTS.md`, `CLAUDE.md`, `.cursor/rules/`, `.cursorrules`, `.github/copilot-instructions.md`)
-- repo-local OpenCode config such as `opencode.json`
+- repo-local config such as `opencode.json` or `.mimocode/`
 
 If architecture is still unclear after reading config and docs, inspect a small number of representative code files to find the real entrypoints, package boundaries, and execution flow. Prefer reading the files that explain how the system is wired together over random leaf files.
 
@@ -57,7 +79,7 @@ Exclude:
 - long tutorials or exhaustive file trees
 - obvious language conventions
 - speculative claims or anything you could not verify
-- content better stored in another file referenced via `opencode.json` `instructions`
+- content better stored in another file referenced via config instructions
 
 When in doubt, omit.
 

@@ -1,11 +1,34 @@
-- 全程使用中文进行交流，所有对话、解释和注释一律使用中文。
-- Always use superpowers skill instead of builtin plan mode.
-- To regenerate the JavaScript SDK, run `./packages/sdk/js/script/build.ts`.
-- To regenerate the full SDK (JS + OpenAPI), run `./script/generate.ts`.
-- ALWAYS USE PARALLEL TOOLS WHEN APPLICABLE.
-- The default branch in this repo is `dev`.
-- Local `main` ref may not exist; use `dev` or `origin/dev` for diffs.
-- Prefer automation: execute requested actions without confirmation unless blocked by missing info or safety/irreversibility.
+---
+> **/init 规范管控生效中** — 以下规则由 `/init` 命令加载，所有交互强制遵守。
+> 语言配置：`zh.ts` — 全程中文模式
+---
+
+## 0. 语言强制约束（/init 激活，永久生效）
+
+1. **所有自然语言输出必须使用简体中文**。包括但不限于：需求分析、方案描述、代码解释、报错分析、总结汇报、对话问答。
+2. **允许保留英文的例外**：编程语言关键字、函数名/类名、开源项目原名、通用专业缩写（API/SDK/CLI/CI等）、代码内标识符、技术术语（如 lint/typecheck/debug）。
+3. **禁止**：整段英文回复、英文总结、默认英文解释需求。
+4. **代码注释优先中文**，长说明必须中文，单行注释可用中文简要说明逻辑。
+5. **报错提示、指引文案**统一中文展示。
+6. 若检测到语言异常，自动切换纯中文模式并提示：
+   > 语言配置校验触发，已启用强制中文回复模式，遵循 AGENTS.md 约束执行交互。
+
+## 0.1 开发编码规范
+
+1. **需求分析**：中文梳理需求边界、业务逻辑。
+2. **设计文档**：接口说明、数据表设计、流程图文案全部中文。
+3. **交付产物**：README、使用说明、部署文档统一中文撰写。
+4. **对话回复结构**：
+   - 先结论总述
+   - 分点展开细节
+   - 必要补充注意事项/落地步骤
+   - 使用 Markdown 排版，代码块注释使用中文说明逻辑
+
+## 0.2 命令说明
+
+- **`/init`**：重载 AGENTS.md 全部规则，绑定 zh.ts 中文语言配置，重置会话上下文约束。
+- **`/review`**：审查未提交更改、commit、branch 或 PR，从近期工作中提取重复工作流封装为可复用 skills。
+- **`/distill`**：设定明确停止条件目标，持续运行直到评估机制判定目标达成，达成后自动清理目标（goal clear）。
 
 ## Repo structure
 
