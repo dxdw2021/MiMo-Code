@@ -1553,6 +1553,7 @@ function ReasoningHeader(props: {
   duration?: string
 }) {
   const { theme } = useTheme()
+  const t = useLanguage().t
   const fg = () =>
     props.open
       ? RGBA.fromValues(theme.warning.r, theme.warning.g, theme.warning.b, theme.thinkingOpacity)
@@ -1562,7 +1563,9 @@ function ReasoningHeader(props: {
     <Switch>
       <Match when={!props.done}>
         <box flexDirection="row">
-          <Spinner color={fg()}>{props.title ? "Thinking: " + props.title : "Thinking"}</Spinner>
+          <Spinner color={fg()}>
+            {props.title ? t("tui.reasoning.thinking_with_title", { title: props.title }) : t("tui.reasoning.thinking")}
+          </Spinner>
         </box>
       </Match>
       <Match when={true}>
@@ -1570,16 +1573,15 @@ function ReasoningHeader(props: {
           <Show when={props.toggleable}>
             <span>{props.open ? "- " : "+ "}</span>
           </Show>
-          <span>Thought</span>
           <Show when={props.title || props.duration}>
-            <span>: </span>
+            <span>{t("tui.reasoning.thought_with_title", { title: props.title ?? "" })}</span>
           </Show>
-          <Show when={props.title}>
-            <span>{props.title}</span>
+          <Show when={!props.title && !props.duration}>
+            <span>{t("tui.reasoning.thought")}</span>
           </Show>
           <Show when={props.duration}>
             <span>
-              {props.title ? " · " : ""}
+              {" · "}
               {props.duration}
             </span>
           </Show>
@@ -1746,6 +1748,7 @@ function PlanExit(props: ToolProps<any>) {
 
 function GenericTool(props: ToolProps<any>) {
   const { theme } = useTheme()
+  const t = useLanguage().t
   const ctx = use()
   const output = createMemo(() => props.output?.trim() ?? "")
   const [expanded, setExpanded] = createSignal(false)
@@ -1774,7 +1777,7 @@ function GenericTool(props: ToolProps<any>) {
         <box gap={1}>
           <text fg={theme.text}>{limited()}</text>
           <Show when={overflow()}>
-            <text fg={theme.textMuted}>{expanded() ? "Click to collapse" : "Click to expand"}</text>
+            <text fg={theme.textMuted}>{expanded() ? t("tui.tool.click_to_collapse") : t("tui.tool.click_to_expand")}</text>
           </Show>
         </box>
       </BlockTool>
@@ -1991,6 +1994,7 @@ function hasLongDisplayLine(content: string) {
 
 function Bash(props: ToolProps<typeof BashTool>) {
   const { theme } = useTheme()
+  const t = useLanguage().t
   const sync = useSync()
   const isRunning = createMemo(() => props.part.state.status === "running")
   const output = createMemo(() => stripAnsi(props.metadata.output?.trim() ?? ""))
@@ -2042,7 +2046,7 @@ function Bash(props: ToolProps<typeof BashTool>) {
               <text fg={theme.text}>{limited()}</text>
             </Show>
             <Show when={overflow()}>
-              <text fg={theme.textMuted}>{expanded() ? "Click to collapse" : "Click to expand"}</text>
+              <text fg={theme.textMuted}>{expanded() ? t("tui.tool.click_to_collapse") : t("tui.tool.click_to_expand")}</text>
             </Show>
           </box>
         </BlockTool>
@@ -2058,6 +2062,7 @@ function Bash(props: ToolProps<typeof BashTool>) {
 
 function Write(props: ToolProps<typeof WriteTool>) {
   const { theme, syntax } = useTheme()
+  const t = useLanguage().t
   const [expanded, setExpanded] = createSignal(false)
   const code = createMemo(() => {
     if (!props.input.content) return ""
@@ -2078,7 +2083,7 @@ function Write(props: ToolProps<typeof WriteTool>) {
             when={!collapsed() || expanded()}
             fallback={
               <text fg={theme.textMuted}>
-                Click to expand ({lineCount()} {lineCount() === 1 ? "line" : "lines"})
+                {t("tui.tool.click_to_expand_lines", { count: lineCount(), word: lineCount() === 1 ? t("tui.tool.line") : t("tui.tool.lines") })}
               </text>
             }
           >
@@ -2092,7 +2097,7 @@ function Write(props: ToolProps<typeof WriteTool>) {
               />
             </line_number>
             <Show when={collapsed()}>
-              <text fg={theme.textMuted}>Click to collapse</text>
+              <text fg={theme.textMuted}>{t("tui.tool.click_to_collapse")}</text>
             </Show>
           </Show>
           <Diagnostics diagnostics={props.metadata.diagnostics} filePath={props.input.filePath ?? ""} />
@@ -2337,6 +2342,7 @@ function Edit(props: ToolProps<typeof EditTool>) {
 function ApplyPatch(props: ToolProps<typeof ApplyPatchTool>) {
   const ctx = use()
   const { theme, syntax } = useTheme()
+  const t = useLanguage().t
   const [expanded, setExpanded] = createSignal<string[]>([])
 
   const files = createMemo(() => props.metadata.files ?? [])
@@ -2403,7 +2409,7 @@ function ApplyPatch(props: ToolProps<typeof ApplyPatchTool>) {
                   when={file.type !== "delete"}
                   fallback={
                     <text fg={theme.diffRemoved}>
-                      -{file.deletions} line{file.deletions !== 1 ? "s" : ""}
+                      -{file.deletions} {file.deletions === 1 ? t("tui.tool.line") : t("tui.tool.lines")}
                     </text>
                   }
                 >
@@ -2411,13 +2417,13 @@ function ApplyPatch(props: ToolProps<typeof ApplyPatchTool>) {
                     when={!collapsed() || open()}
                     fallback={
                       <text fg={theme.textMuted}>
-                        Click to expand ({count()} change{count() !== 1 ? "s" : ""})
+                        {t("tui.tool.click_to_expand_changes", { count: count(), plural: count() !== 1 ? "s" : "" })}
                       </text>
                     }
                   >
                     <Diff diff={file.patch} filePath={file.filePath} />
                     <Show when={collapsed()}>
-                      <text fg={theme.textMuted}>Click to collapse</text>
+                      <text fg={theme.textMuted}>{t("tui.tool.click_to_collapse")}</text>
                     </Show>
                   </Show>
                   <Diagnostics diagnostics={props.metadata.diagnostics} filePath={file.movePath ?? file.filePath} />
@@ -2429,7 +2435,7 @@ function ApplyPatch(props: ToolProps<typeof ApplyPatchTool>) {
       </Match>
       <Match when={true}>
         <InlineTool icon="%" pending="Preparing patch..." complete={false} part={props.part}>
-          Patch
+          {"Patch"}
         </InlineTool>
       </Match>
     </Switch>

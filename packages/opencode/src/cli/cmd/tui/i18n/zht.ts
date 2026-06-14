@@ -471,4 +471,18 @@ export const dict = {
   "tui.prompt.hint.submit": "提交",
   "tui.prompt.hint.toggle": "切換",
   "tui.prompt.hint.dismiss": "取消",
+
+  // Reasoning / Thinking
+  "tui.reasoning.thinking": "思考中",
+  "tui.reasoning.thinking_with_title": "思考中：{{title}}",
+  "tui.reasoning.thought": "思考",
+  "tui.reasoning.thought_with_title": "思考：{{title}}",
+
+  // Tool output
+  "tui.tool.click_to_expand": "點擊展開",
+  "tui.tool.click_to_collapse": "點擊折疊",
+  "tui.tool.click_to_expand_lines": "點擊展開（{{count}} {{word}}）",
+  "tui.tool.click_to_expand_changes": "點擊展開（{{count}} 項更改）",
+  "tui.tool.line": "行",
+  "tui.tool.lines": "行",
 } satisfies Partial<Record<Keys, string>>

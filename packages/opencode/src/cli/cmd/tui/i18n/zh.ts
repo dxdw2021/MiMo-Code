@@ -554,6 +554,20 @@ export const dict = {
   // Prompt
   "tui.prompt.truncated.expand": "（点击展开）",
 
+  // Reasoning / Thinking
+  "tui.reasoning.thinking": "思考中",
+  "tui.reasoning.thinking_with_title": "思考中：{{title}}",
+  "tui.reasoning.thought": "思考",
+  "tui.reasoning.thought_with_title": "思考：{{title}}",
+
+  // Tool output
+  "tui.tool.click_to_expand": "点击展开",
+  "tui.tool.click_to_collapse": "点击折叠",
+  "tui.tool.click_to_expand_lines": "点击展开（{{count}} {{word}}）",
+  "tui.tool.click_to_expand_changes": "点击展开（{{count}} 项更改）",
+  "tui.tool.line": "行",
+  "tui.tool.lines": "行",
+
   // Errors & notifications
   "tui.error.fork_failed": "派生会话失败",
   "tui.heap_snapshot.written": "堆快照已写入 {{files}}",

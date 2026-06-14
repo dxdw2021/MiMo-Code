@@ -561,6 +561,20 @@ export const dict: Record<string, string> = {
   // Prompt
   "tui.prompt.truncated.expand": "(click to expand)",
 
+  // Reasoning / Thinking
+  "tui.reasoning.thinking": "Thinking",
+  "tui.reasoning.thinking_with_title": "Thinking: {{title}}",
+  "tui.reasoning.thought": "Thought",
+  "tui.reasoning.thought_with_title": "Thought: {{title}}",
+
+  // Tool output
+  "tui.tool.click_to_expand": "Click to expand",
+  "tui.tool.click_to_collapse": "Click to collapse",
+  "tui.tool.click_to_expand_lines": "Click to expand ({{count}} {{word}})",
+  "tui.tool.click_to_expand_changes": "Click to expand ({{count}} change{{plural}})",
+  "tui.tool.line": "line",
+  "tui.tool.lines": "lines",
+
   // Errors & notifications
   "tui.error.fork_failed": "Failed to fork session",
   "tui.heap_snapshot.written": "Heap snapshot written to {{files}}",
