@@ -4,38 +4,55 @@ import { useLanguage } from "../context/language"
 import { DialogSelect } from "../ui/dialog-select"
 import { DialogPrompt } from "../ui/dialog-prompt"
 import { usePromptRef } from "../context/prompt"
-import { Global } from "@/global"
-import path from "path"
+import process from "process"
 
-interface ExpertManifest {
-  categories: {
-    id: string
-    name: { en: string; zh: string }
-    description: { en: string; zh: string }
-  }[]
-  experts: {
-    id: string
-    categoryId: string
-    displayName: { en: string; zh: string }
-    profession: { en: string; zh: string }
-    description: { en: string; zh: string }
-    promptFile: string
-    avatar: string
-    expertType: string
-    tags?: { en: string; zh: string }[]
-    quickPrompts?: { en: string; zh: string }[]
-    defaultInitPrompt?: { en: string; zh: string }
-  }[]
+// ── 数据结构 ──────────────────────────────────
+
+interface ExpertItem {
+  id: string
+  categoryId: string
+  displayName: { en: string; zh: string }
+  profession: { en: string; zh: string }
+  description: { en: string; zh: string }
+  quickPrompts?: { en: string; zh: string }[]
+  defaultInitPrompt?: { en: string; zh: string }
 }
 
-// 从项目根目录加载 manifest.json（相对 TUI 源码路径）
-const MANIFEST_PATH = path.resolve(import.meta.dir, "../../../../../../experts/manifest.json")
+interface ManifestData {
+  categories: { id: string; name: { en: string; zh: string }; description: { en: string; zh: string } }[]
+  experts: ExpertItem[]
+}
 
-async function loadExperts(): Promise<ExpertManifest | null> {
+// 同步查找有效路径（纯路径拼接，不读取文件）
+function findManifestPath(): string {
+  const cwd = process.cwd()
+  const candidates = [
+    cwd + "/experts/manifest.json",
+  ]
+  // 尝试从 import.meta.dir 推断
+  try {
+    const dir = (typeof import.meta !== "undefined" && (import.meta as any).dir) as string | undefined
+    if (dir) {
+      candidates.push(dir.split("\\").slice(0, -7).join("\\") + "\\experts\\manifest.json")
+    }
+  } catch {}
+  // 返回第一个存在的文件
+  for (const p of candidates) {
+    try {
+      const f = Bun.file(p)
+      if (f.size > 0) return p
+    } catch {}
+  }
+  return candidates[0]
+}
+
+const MANIFEST_PATH = findManifestPath()
+
+async function loadExperts(): Promise<ManifestData | null> {
   try {
     const file = Bun.file(MANIFEST_PATH)
-    if (!(await file.exists())) return null
-    return await file.json() as ExpertManifest
+    if (file.size === 0) return null
+    return await file.json() as ManifestData
   } catch {
     return null
   }
@@ -43,7 +60,7 @@ async function loadExperts(): Promise<ExpertManifest | null> {
 
 // ── 第一步：选择分类 ──────────────────────────────
 
-function DialogCategorySelect(props: { data: ExpertManifest; onSelect: (categoryId: string) => void }) {
+function DialogCategorySelect(props: { data: ManifestData; onSelect: (categoryId: string) => void }) {
   const { t, effective } = useLanguage()
   const locale = createMemo(() => (effective() === "zh" || effective() === "zht" ? "zh" : "en"))
   const options = createMemo(() => {
@@ -65,7 +82,7 @@ function DialogCategorySelect(props: { data: ExpertManifest; onSelect: (category
 
 // ── 第二步：选择专家 ──────────────────────────────
 
-function DialogExpertSelect(props: { data: ExpertManifest; categoryId: string }) {
+function DialogExpertSelect(props: { data: ManifestData; categoryId: string }) {
   const dialog = useDialog()
   const { t, effective } = useLanguage()
   const promptRef = usePromptRef()
@@ -85,7 +102,6 @@ function DialogExpertSelect(props: { data: ExpertManifest; categoryId: string })
   function onSelect(opt: { value: string }) {
     const expert = props.data.experts.find((ex) => ex.id === opt.value)
     if (!expert) return
-
     const l = locale()
     const defaultPrompt = expert.defaultInitPrompt?.[l as keyof typeof expert.defaultInitPrompt] as string | undefined
     const placeholder = (expert.quickPrompts?.[0]?.[l as keyof typeof expert.quickPrompts[0]] as string) || defaultPrompt || ""
@@ -99,8 +115,7 @@ function DialogExpertSelect(props: { data: ExpertManifest; categoryId: string })
       if (ref) {
         const role = (expert.profession[l as keyof typeof expert.profession] as string) || ""
         const desc = (expert.description[l as keyof typeof expert.description] as string) || ""
-        const input = `我需要你以${role}的身份协助我。${desc}\n\n我的需求：${text}`
-        ref.set({ input, parts: [] })
+        ref.set({ input: `我需要你以${role}的身份协助我。${desc}\n\n我的需求：${text}`, parts: [] })
         setTimeout(() => ref.submit(), 100)
       }
       dialog.clear()
@@ -116,23 +131,34 @@ function DialogExpertSelect(props: { data: ExpertManifest; categoryId: string })
   )
 }
 
-// ── 入口：先加载数据，再分步导航 ─────────────────
+// ── 入口 ────────────────────────────────────
 
 export function DialogExperts() {
   const dialog = useDialog()
+  const { t } = useLanguage()
   const [data] = createResource(loadExperts)
 
   function onCategoryChosen(categoryId: string) {
-    dialog.replace(() => {
-      const d = data()
-      if (!d) return <></>
-      return <DialogExpertSelect data={d} categoryId={categoryId} />
-    })
+    const d = data()
+    if (!d) return
+    dialog.replace(() => <DialogExpertSelect data={d} categoryId={categoryId} />)
   }
 
   return (
-    <Show when={data()}>
-      {(d) => <DialogCategorySelect data={d()} onSelect={onCategoryChosen} />}
+    <Show when={data() !== undefined} fallback={
+      <DialogSelect
+        title={t("tui.dialog.experts.select_category")}
+        options={[{ title: "正在加载专家数据...", value: "", disabled: true }]}
+      />
+    }>
+      <Show when={data() !== null} fallback={
+        <DialogSelect
+          title={t("tui.dialog.experts.select_category")}
+          options={[{ title: "⚠️ 未找到专家数据", value: "", disabled: true }]}
+        />
+      }>
+        <DialogCategorySelect data={data()!} onSelect={onCategoryChosen} />
+      </Show>
     </Show>
   )
 }
