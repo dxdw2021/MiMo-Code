@@ -1,12 +1,11 @@
-import { createMemo, createResource, createSignal, Show } from "solid-js"
+import { createMemo, createResource, Show } from "solid-js"
 import { useDialog } from "../ui/dialog"
 import { useLanguage } from "../context/language"
 import { DialogSelect } from "../ui/dialog-select"
 import { DialogPrompt } from "../ui/dialog-prompt"
 import { usePromptRef } from "../context/prompt"
-import process from "process"
-
-const MANIFEST_PATH = process.cwd() + "/experts/manifest.json"
+import { Global } from "@/global"
+import path from "path"
 
 interface ExpertManifest {
   categories: {
@@ -29,58 +28,67 @@ interface ExpertManifest {
   }[]
 }
 
-async function loadExperts(): Promise<ExpertManifest> {
-  return await Bun.file(MANIFEST_PATH).json() as ExpertManifest
+// 从项目根目录加载 manifest.json（相对 TUI 源码路径）
+const MANIFEST_PATH = path.resolve(import.meta.dir, "../../../../../../experts/manifest.json")
+
+async function loadExperts(): Promise<ExpertManifest | null> {
+  try {
+    const file = Bun.file(MANIFEST_PATH)
+    if (!(await file.exists())) return null
+    return await file.json() as ExpertManifest
+  } catch {
+    return null
+  }
 }
 
-export function DialogExperts() {
-  const dialog = useDialog()
+// ── 第一步：选择分类 ──────────────────────────────
+
+function DialogCategorySelect(props: { data: ExpertManifest; onSelect: (categoryId: string) => void }) {
   const { t, effective } = useLanguage()
-  const promptRef = usePromptRef()
-  const [data] = createResource(loadExperts)
-  const [selectedCategory, setSelectedCategory] = createSignal<string | null>(null)
-
   const locale = createMemo(() => (effective() === "zh" || effective() === "zht" ? "zh" : "en"))
-
-  const categories = createMemo(() => {
-    const d = data()
-    if (!d) return []
+  const options = createMemo(() => {
     const l = locale()
-    return d.categories.map((cat) => ({
+    return props.data.categories.map((cat) => ({
       title: cat.name[l as keyof typeof cat.name] as string,
       value: cat.id,
       description: cat.description[l as keyof typeof cat.description] as string,
     }))
   })
+  return (
+    <DialogSelect
+      title={t("tui.dialog.experts.select_category")}
+      options={options()}
+      onSelect={(opt) => props.onSelect(opt.value)}
+    />
+  )
+}
 
-  const experts = createMemo(() => {
-    const d = data()
-    const cat = selectedCategory()
-    if (!d || !cat) return []
+// ── 第二步：选择专家 ──────────────────────────────
+
+function DialogExpertSelect(props: { data: ExpertManifest; categoryId: string }) {
+  const dialog = useDialog()
+  const { t, effective } = useLanguage()
+  const promptRef = usePromptRef()
+  const locale = createMemo(() => (effective() === "zh" || effective() === "zht" ? "zh" : "en"))
+
+  const options = createMemo(() => {
     const l = locale()
-    return d.experts
-      .filter((ex) => ex.categoryId === cat)
+    return props.data.experts
+      .filter((ex) => ex.categoryId === props.categoryId)
       .map((ex) => ({
         title: `${(ex.displayName[l as keyof typeof ex.displayName] as string) || ex.id} — ${(ex.profession[l as keyof typeof ex.profession] as string) || ""}`,
         value: ex.id,
         description: (ex.description[l as keyof typeof ex.description] as string)?.slice(0, 80),
-        expert: ex,
       }))
   })
 
-  function onSelectCategory(option: { value: string }) {
-    setSelectedCategory(option.value)
-  }
-
-  function onSelectExpert(option: { value: string }) {
-    const d = data()
-    if (!d) return
-    const expert = d.experts.find((ex) => ex.id === option.value)
+  function onSelect(opt: { value: string }) {
+    const expert = props.data.experts.find((ex) => ex.id === opt.value)
     if (!expert) return
 
     const l = locale()
     const defaultPrompt = expert.defaultInitPrompt?.[l as keyof typeof expert.defaultInitPrompt] as string | undefined
-    const placeholder = (expert.quickPrompts?.[0]?.[l as keyof typeof expert.quickPrompts[0]] as string) || defaultPrompt || `请教你关于${(expert.profession[l as keyof typeof expert.profession] as string) || expert.id}的问题`
+    const placeholder = (expert.quickPrompts?.[0]?.[l as keyof typeof expert.quickPrompts[0]] as string) || defaultPrompt || ""
 
     void DialogPrompt.show(dialog, (expert.displayName[l as keyof typeof expert.displayName] as string) || expert.id, {
       placeholder,
@@ -91,10 +99,8 @@ export function DialogExperts() {
       if (ref) {
         const role = (expert.profession[l as keyof typeof expert.profession] as string) || ""
         const desc = (expert.description[l as keyof typeof expert.description] as string) || ""
-        // 构造专家上下文消息，让 AI 扮演该专家角色
         const input = `我需要你以${role}的身份协助我。${desc}\n\n我的需求：${text}`
         ref.set({ input, parts: [] })
-        // 立即提交消息，调用 AI 响应
         setTimeout(() => ref.submit(), 100)
       }
       dialog.clear()
@@ -102,23 +108,31 @@ export function DialogExperts() {
   }
 
   return (
+    <DialogSelect
+      title={t("tui.dialog.experts.select_expert")}
+      options={options()}
+      onSelect={onSelect}
+    />
+  )
+}
+
+// ── 入口：先加载数据，再分步导航 ─────────────────
+
+export function DialogExperts() {
+  const dialog = useDialog()
+  const [data] = createResource(loadExperts)
+
+  function onCategoryChosen(categoryId: string) {
+    dialog.replace(() => {
+      const d = data()
+      if (!d) return <></>
+      return <DialogExpertSelect data={d} categoryId={categoryId} />
+    })
+  }
+
+  return (
     <Show when={data()}>
-      <Show when={!selectedCategory()}>
-        <DialogSelect
-          title={t("tui.dialog.experts.select_category")}
-          options={categories()}
-          onSelect={onSelectCategory}
-          onMove={() => {}}
-        />
-      </Show>
-      <Show when={selectedCategory()}>
-        <DialogSelect
-          title={t("tui.dialog.experts.select_expert")}
-          options={experts()}
-          onSelect={onSelectExpert}
-          onMove={() => {}}
-        />
-      </Show>
+      {(d) => <DialogCategorySelect data={d()} onSelect={onCategoryChosen} />}
     </Show>
   )
 }
