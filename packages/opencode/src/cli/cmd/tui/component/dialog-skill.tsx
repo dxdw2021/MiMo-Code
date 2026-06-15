@@ -32,7 +32,7 @@ export function DialogSkill(props: DialogSkillProps) {
       title: skill.name.padEnd(maxWidth),
       description: skill.description?.replace(/\s+/g, " ").trim(),
       value: skill.name,
-      category: "Skills",
+      category: t("tui.dialog.skill.title"),
       onSelect: () => {
         props.onSelect(skill.name)
         dialog.clear()

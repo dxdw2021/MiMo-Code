@@ -44,13 +44,13 @@ export function createDialogProviderOptions() {
           title: provider.name,
           value: provider.id,
           description: {
-            opencode: "(Recommended)",
-            anthropic: "(API key)",
-            openai: "(ChatGPT Plus/Pro or API key)",
-            "opencode-go": "Low cost subscription for everyone",
+            opencode: t("tui.dialog.provider.opencode_desc"),
+            anthropic: t("tui.dialog.provider.anthropic_desc"),
+            openai: t("tui.dialog.provider.openai_desc"),
+            "opencode-go": t("tui.dialog.provider.opencode_go_desc"),
           }[provider.id],
           footer: consoleManaged ? sync.data.console_state.activeOrgName : undefined,
-          category: provider.id in PROVIDER_PRIORITY ? "Popular" : "Other",
+          category: provider.id in PROVIDER_PRIORITY ? t("tui.dialog.provider.category_popular") : t("tui.dialog.provider.category_other"),
           gutter: connected ? <text fg={theme.success}>✓</text> : undefined,
           async onSelect() {
             if (consoleManaged) return
@@ -58,7 +58,7 @@ export function createDialogProviderOptions() {
             const methods = sync.data.provider_auth[provider.id] ?? [
               {
                 type: "api",
-                label: "API key",
+                label: t("tui.dialog.provider.auth_api_key"),
               },
             ]
             let index: number | null = 0

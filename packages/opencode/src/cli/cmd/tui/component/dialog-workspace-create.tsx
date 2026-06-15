@@ -10,6 +10,7 @@ import { errorData, errorMessage } from "@/util/error"
 import * as Log from "@/util/log"
 import { useSDK } from "../context/sdk"
 import { useToast } from "../ui/toast"
+import { useLanguage } from "@tui/context/language"
 
 type Adaptor = {
   type: string

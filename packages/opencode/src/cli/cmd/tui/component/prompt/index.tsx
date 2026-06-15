@@ -378,7 +378,7 @@ export function Prompt(props: PromptProps) {
 
   createEffect(() => {
     if (props.disabled) input.cursorColor = theme.backgroundElement
-    if (!props.disabled) input.cursorColor = theme.text
+    if (!props.disabled) input.cursorColor = theme.textMuted
   })
 
   const lastUserMessage = createMemo(() => {
@@ -1416,8 +1416,8 @@ export function Prompt(props: PromptProps) {
             <textarea
               placeholder={placeholderText()}
               placeholderColor={theme.textMuted}
-              textColor={keybind.leader ? theme.textMuted : theme.text}
-              focusedTextColor={keybind.leader ? theme.textMuted : theme.text}
+              textColor={keybind.leader ? theme.textMuted : theme.textMuted}
+              focusedTextColor={keybind.leader ? theme.textMuted : theme.textMuted}
               minHeight={1}
               maxHeight={6}
               onContentChange={() => {
@@ -1564,12 +1564,12 @@ export function Prompt(props: PromptProps) {
                 setTimeout(() => {
                   // setTimeout is a workaround and needs to be addressed properly
                   if (!input || input.isDestroyed) return
-                  input.cursorColor = theme.text
+                  input.cursorColor = theme.textMuted
                 }, 0)
               }}
               onMouseDown={(r: MouseEvent) => r.target?.focus()}
               focusedBackgroundColor={theme.backgroundElement}
-              cursorColor={theme.text}
+              cursorColor={theme.accent}
               syntaxStyle={syntax()}
             />
             <box flexDirection="row" flexShrink={0} paddingTop={1} gap={1} justifyContent="space-between">
@@ -1585,7 +1585,7 @@ export function Prompt(props: PromptProps) {
                           <text fg={fadeColor(theme.textMuted, modelMetaAlpha())}>·</text>
                           <text
                             flexShrink={0}
-                            fg={fadeColor(keybind.leader ? theme.textMuted : theme.text, modelMetaAlpha())}
+                            fg={fadeColor(keybind.leader ? theme.textMuted : theme.textMuted, modelMetaAlpha())}
                           >
                             {local.model.parsed().model}
                           </text>
@@ -1779,7 +1779,7 @@ export function Prompt(props: PromptProps) {
                   })()}
                 </box>
               </box>
-              <text fg={store.interrupt > 0 ? theme.primary : theme.text}>
+              <text fg={store.interrupt > 0 ? theme.primary : theme.textMuted}>
                 {t("tui.prompt.hint.esc")}{" "}
                 <span style={{ fg: store.interrupt > 0 ? theme.primary : theme.textMuted }}>
                   {store.interrupt > 0 ? t("tui.prompt.hint.interrupt_again") : t("tui.prompt.hint.interrupt")}
@@ -1799,23 +1799,23 @@ export function Prompt(props: PromptProps) {
                         </text>
                       )}
                     </Show>
-                    <text fg={theme.text}>
+                    <text fg={theme.textMuted}>
                       {keybind.print("agent_cycle")} <span style={{ fg: theme.textMuted }}>{t("tui.prompt.hint.switch_mode")}</span>
                     </text>
-                    <text fg={theme.text}>
+                    <text fg={theme.textMuted}>
                       {keybind.print("command_list")}{" "}
                       <span style={{ fg: theme.textMuted }}>{t("tui.prompt.hint.settings")}</span>
                     </text>
                   </box>
                   <Show when={status().type === "idle"}>
                     <box gap={2} flexDirection="row">
-                      <text fg={theme.text}>
+                      <text fg={theme.textMuted}>
                         @ <span style={{ fg: theme.textMuted }}>{t("tui.prompt.hint.attach_file")}</span>
                       </text>
-                      <text fg={theme.text}>
+                      <text fg={theme.textMuted}>
                         $ <span style={{ fg: theme.textMuted }}>{t("tui.prompt.hint.subagent")}</span>
                       </text>
-                      <text fg={theme.text}>
+                      <text fg={theme.textMuted}>
                         / <span style={{ fg: theme.textMuted }}>{t("tui.prompt.hint.commands")}</span>
                       </text>
                     </box>
@@ -1823,7 +1823,7 @@ export function Prompt(props: PromptProps) {
                 </Match>
                 <Match when={store.mode === "shell"}>
                   <box flexGrow={1} flexDirection="row" justifyContent="flex-end">
-                    <text fg={theme.text}>
+                    <text fg={theme.textMuted}>
                       esc <span style={{ fg: theme.textMuted }}>{t("tui.shell.exit")}</span>
                     </text>
                   </box>
