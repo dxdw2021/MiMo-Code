@@ -91,6 +91,11 @@ import { TuiPluginRuntime } from "../../plugin"
 import { DialogGoUpsell } from "../../component/dialog-go-upsell"
 import { SessionRetry } from "@/session/retry"
 import { getRevertDiffFiles } from "../../util/revert-diff"
+import { BackgroundImage } from "../../component/background-image"
+import { StarryBackground } from "../../component/starry-background"
+import { BUILTIN_BGS, EFFECT_VALUES } from "../../component/bg-registry"
+import { SOLID_VALUE } from "../../component/dialog-image-list"
+import { isPlainTerminal } from "../../util/terminal"
 
 addDefaultParsers(parsers.parsers)
 
@@ -130,6 +135,13 @@ export function Session() {
   const kv = useKV()
   const { theme } = useTheme()
   const promptRef = usePromptRef()
+  const plainTerminal = isPlainTerminal()
+  const bgImagePath = createMemo(() => {
+    const filename = kv.get("background_image")
+    if (!filename || typeof filename !== "string") return undefined
+    if (filename === SOLID_VALUE || EFFECT_VALUES.has(filename)) return filename
+    return path.join(Global.Path.config, "backgrounds", filename)
+  })
   const session = createMemo(() => sync.session.get(route.sessionID))
   const currentAgentID = useCurrentAgentID()
   const actors = createMemo(() => sync.data.actor[route.sessionID] ?? [])
@@ -1061,7 +1073,15 @@ export function Session() {
         tui: tuiConfig,
       }}
     >
-      <box flexDirection="row">
+      <Show when={!plainTerminal}>
+        <Show when={bgImagePath() === SOLID_VALUE}>
+          <box position="absolute" top={0} left={0} width="100%" height="100%" zIndex={0} backgroundColor={kv.get("background_color") ?? theme.background} />
+        </Show>
+        <Show when={bgImagePath() !== undefined && bgImagePath() !== SOLID_VALUE && !EFFECT_VALUES.has(bgImagePath() as string)}>
+          <BackgroundImage path={bgImagePath()!} />
+        </Show>
+      </Show>
+      <box flexDirection="row" zIndex={1}>
         <box flexGrow={1} paddingBottom={1} paddingLeft={2} paddingRight={2} gap={1} onMouse={onWheel}>
           <Show when={session()}>
             <scrollbox

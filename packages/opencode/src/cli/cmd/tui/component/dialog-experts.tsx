@@ -58,17 +58,20 @@ export function DialogExperts() {
     return m
   })
 
+  const MAX_VISIBLE_EXPERTS = 50
+
   const options = createMemo(() => {
     const d = data()
     if (!d) return []
     const l = locale()
-    return d.experts.map((ex) => ({
+    const allExperts = d.experts.map((ex) => ({
       title: `${(ex.displayName[l as keyof typeof ex.displayName] as string) || ex.id} — ${(ex.profession[l as keyof typeof ex.profession] as string) || ""}`,
       value: ex.id,
       description: (ex.description[l as keyof typeof ex.description] as string)?.slice(0, 80),
       category: catNames()[ex.categoryId] || "",
       _expert: ex,
     }))
+    return allExperts.slice(0, MAX_VISIBLE_EXPERTS)
   })
 
   function onSelect(opt: { value: string }) {
