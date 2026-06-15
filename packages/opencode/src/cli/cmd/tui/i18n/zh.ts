@@ -453,6 +453,7 @@ export const dict = {
   "tui.toast.instructions_loaded": "已加载 {{files}}",
   "tui.sidebar.instructions": "指令文件",
   "tui.sidebar.cwd": "工作目录",
+  "tui.sidebar.logpath": "日志路径",
   "tui.toast.unknown_error": "发生未知错误",
   "tui.command.desc.init": "引导式 AGENTS.md 设置",
   "tui.command.desc.review": "审查更改 [commit|branch|pr]，默认为未提交的更改",

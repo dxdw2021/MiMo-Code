@@ -460,6 +460,7 @@ export const dict: Record<string, string> = {
   "tui.toast.instructions_loaded": "Loaded {{files}}",
   "tui.sidebar.instructions": "Instructions",
   "tui.sidebar.cwd": "Working Directory",
+  "tui.sidebar.logpath": "Log Path",
   "tui.toast.unknown_error": "An unknown error has occurred",
   "tui.command.desc.init": "guided AGENTS.md setup",
   "tui.command.desc.review": "review changes [commit|branch|pr], defaults to uncommitted",
