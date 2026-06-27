@@ -246,6 +246,8 @@ export const dict = {
   "tui.dialog.agreement.title": "服务协议与隐私政策",
   "tui.dialog.agreement.message": "请阅读并同意后继续使用。",
   "tui.dialog.agreement.confirm": "同意并继续",
+  "tui.dialog.variant.select": "选择变体",
+  "tui.dialog.variant.default": "默认",
   "tui.command.consent.revoke.title": "撤销免费模型协议",
   "tui.consent.revoked": "已撤销免费模型协议 — 下次使用时将再次请求同意",
   "tui.dialog.select.placeholder": "搜索",
@@ -451,4 +453,41 @@ export const dict = {
   "trust.dangerous.advice_root": "除非有明确的理由，否则不要信任文件系统根目录。",
   "trust.dangerous.option.yes": "我了解风险，仅本次信任",
   "trust.dangerous.option.no": "退出（推荐）",
+
+  // dialog-stash
+  "tui.dialog.stash.title": "暂存",
+  "tui.dialog.stash.delete": "删除",
+  "tui.dialog.stash.just_now": "刚刚",
+  "tui.dialog.stash.minutes_ago": "{{n}} 分钟前",
+  "tui.dialog.stash.hours_ago": "{{n}} 小时前",
+  "tui.dialog.stash.days_ago": "{{n}} 天前",
+
+  // plugin-route-missing
+  "tui.plugin.route_missing": "未知插件路由：{{route}}",
+  "tui.plugin.go_home": "返回首页",
+
+  // session/index.tsx - UI text (thinking, expand/collapse, etc.)
+  "tui.session.ui.thinking": "思考中",
+  "tui.session.ui.thought": "已思考",
+  "tui.session.ui.expand": "点击展开",
+  "tui.session.ui.collapse": "点击收起",
+  "tui.session.ui.queued": "排队中",
+  "tui.session.ui.output_limit": "输出长度已达上限",
+  "tui.session.ui.match": "个匹配",
+  "tui.session.ui.matches": "个匹配",
+  "tui.session.ui.line": "行",
+  "tui.session.ui.lines": "行",
+
+  // Agent/mode names
+  "tui.agent.build": "构建",
+  "tui.agent.plan": "规划",
+  "tui.agent.compose": "编排",
+  "tui.agent.shell": "Shell",
+  "tui.agent.general": "通用",
+
+  // Model UI
+  "tui.model.free": "免费",
+  "tui.model.high": "高性能",
+  "tui.model.medium": "中等",
+  "tui.model.low": "低",
 } satisfies Partial<Record<Keys, string>>

@@ -246,6 +246,8 @@ export const dict = {
   "tui.dialog.agreement.title": "服務協議與隱私政策",
   "tui.dialog.agreement.message": "請閱讀並同意後繼續使用。",
   "tui.dialog.agreement.confirm": "同意並繼續",
+  "tui.dialog.variant.select": "選擇變體",
+  "tui.dialog.variant.default": "預設",
   "tui.command.consent.revoke.title": "撤銷免費模型協議",
   "tui.consent.revoked": "已撤銷免費模型協議 — 下次使用時將再次請求同意",
   "tui.dialog.select.placeholder": "搜尋",

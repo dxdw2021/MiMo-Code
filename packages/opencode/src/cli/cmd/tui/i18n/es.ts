@@ -323,6 +323,8 @@ export const dict = {
   "tui.dialog.agreement.title": "Términos y privacidad",
   "tui.dialog.agreement.message": "Revísalos y acepta para continuar.",
   "tui.dialog.agreement.confirm": "Aceptar y continuar",
+  "tui.dialog.variant.select": "Seleccionar variante",
+  "tui.dialog.variant.default": "Predeterminado",
   "tui.command.consent.revoke.title": "Revocar el acuerdo de modelo gratuito",
   "tui.consent.revoked": "Acuerdo de modelo gratuito revocado: se te pedirá aceptarlo de nuevo",
   "tui.dialog.select.placeholder": "Buscar",

@@ -260,6 +260,8 @@ export const dict = {
   "tui.dialog.agreement.title": "利用規約とプライバシー",
   "tui.dialog.agreement.message": "内容を確認し、同意のうえで続行してください。",
   "tui.dialog.agreement.confirm": "同意して続行",
+  "tui.dialog.variant.select": "バリアントを選択",
+  "tui.dialog.variant.default": "デフォルト",
   "tui.command.consent.revoke.title": "無料モデルの同意を取り消す",
   "tui.consent.revoked": "無料モデルの同意を取り消しました — 次回利用時に再度同意を求めます",
   "tui.dialog.select.placeholder": "検索",
