@@ -1,108 +1,126 @@
-- Use MiMoCode Compose skills when available, otherwise use superpowers skill if installed.
-- To regenerate the JavaScript SDK, run `./packages/sdk/js/script/build.ts`.
-- ALWAYS USE PARALLEL TOOLS WHEN APPLICABLE.
-- The default branch in this repo is `main`.
-- CI triggers on both `main` and `dev` branches.
-- Prefer automation: execute requested actions without confirmation unless blocked by missing info or safety/irreversibility.
+# AGENTS.md
 
-## Core Focus (as of 2025-06-18)
+## Quick reference
 
-Our core development focus is the **TUI** (terminal UI) implementation in `packages/opencode/src/cli/cmd/tui/`. We do not currently provide support for Web or App interfaces. All operations should default to checking the TUI implementation first.
+| Action | Command |
+|---|---|
+| Install deps | `bun install` (root) |
+| Dev server (TUI) | `bun dev` (root) |
+| Lint | `bun lint` (root, runs oxlint) |
+| Typecheck all packages | `bun typecheck` (root, runs Turborepo) |
+| Typecheck one package | `bun typecheck` (from package dir, runs `tsgo --noEmit`) |
+| Run tests | `bun test` (from `packages/opencode`) |
+| Run single test file | `bun test path/to/file.test.ts` (from `packages/opencode`) |
+| Run tests with JUnit | `bun run test:ci` (from `packages/opencode`) |
+| Build standalone binary | `bun run build` (from `packages/opencode`) |
+| Regenerate JS SDK | `./packages/sdk/js/script/build.ts` |
+| Generate config schemas | `bun run script/schema.ts` (from `packages/opencode`) |
 
-## Style Guide
+## Monorepo structure
 
-### General Principles
+Bun workspaces + Turborepo. `packageManager: bun@1.3.14`.
 
-- Keep things in one function unless composable or reusable
-- Avoid `try`/`catch` where possible
-- Avoid using the `any` type
-- Use Bun APIs when possible, like `Bun.file()`
-- Rely on type inference when possible; avoid explicit type annotations or interfaces unless necessary for exports or clarity
-- Prefer functional array methods (flatMap, filter, map) over for loops; use type guards on filter to maintain type inference downstream
-- In `src/config`, follow the existing self-export pattern at the top of the file (for example `export * as ConfigAgent from "./agent"`) when adding a new config module.
+| Package | Path | Purpose |
+|---|---|---|
+| `@mimo-ai/cli` | `packages/opencode` | Core CLI, server, TUI, agents, tools, storage — the main package |
+| `@mimo-ai/shared` | `packages/shared` | Shared utilities (error types, filesystem, config helpers) |
+| `@mimo-ai/sdk` | `packages/sdk/js` | TypeScript SDK for the MiMoCode API |
+| `@mimo-ai/plugin` | `packages/plugin` | Plugin SDK for extending MiMoCode |
+| `@mimo-ai/ui` | `packages/ui` | Shared SolidJS UI components + i18n |
+| `packages/app` | `packages/app` | Web UI (SolidJS) |
+| `packages/desktop` | `packages/desktop` | Electron desktop app |
+| `packages/console` | `packages/console` | Console sub-workspace |
+| `packages/script` | `packages/script` | Build/publish scripts |
 
-Reduce total variable count by inlining when a value is only used once.
+Workspace globs: `packages/*`, `packages/console/*`, `packages/sdk/js`, `packages/slack`.
 
-```ts
-// Good
-const journal = await Bun.file(path.join(dir, "journal.json")).json()
+## Core focus
 
-// Bad
-const journalPath = path.join(dir, "journal.json")
-const journal = await Bun.file(journalPath).json()
-```
+The **TUI** (terminal UI) at `packages/opencode/src/cli/cmd/tui/` is the primary interface. It's built with SolidJS + [opentui](https://github.com/sst/opentui). Web and desktop interfaces exist but are secondary.
 
-### Destructuring
+## Architecture highlights
 
-Avoid unnecessary destructuring. Use dot notation to preserve context.
+- **Entry**: `packages/opencode/src/index.ts` — yargs CLI with 22+ commands. `TuiThreadCommand` is the `$0` default (launches TUI).
+- **Framework**: Effect v4 beta (`4.0.0-beta.48`) for dependency injection, error handling, and service composition. `Effect.fork`/`forkDaemon` don't exist — use `Effect.forkIn(scope)`.
+- **Database**: SQLite via `bun:sqlite` + Drizzle ORM. Schema files at `src/**/*.sql.ts`. Conditional imports: `#db` resolves to `db.bun.ts` or `db.node.ts` depending on runtime.
+- **Conditional imports**: `#db`, `#pty`, `#hono` use Bun's `imports` field in package.json. Resolved differently for `bun` vs `node` runtimes.
+- **Path aliases** (opencode package): `@/*` → `./src/*`, `@tui/*` → `./src/cli/cmd/tui/*`, `@test/*` → `./test/*`.
+- **CLI framework**: yargs with `cmd()` helper from `src/cli/cmd/cmd.ts`.
+- **`--conditions=browser`**: Used in `bun dev` and TUI dev scripts for conditional import resolution.
 
-```ts
-// Good
-obj.a
-obj.b
+## Testing
 
-// Bad
-const { a, b } = obj
-```
+- **Tests MUST run from `packages/opencode`**, never from repo root (`bunfig.toml` guards this with `root = "./do-not-run-tests-from-root"`).
+- CI shards tests 4 ways: `bun run test:ci --shard 1/4`.
+- Tests require git identity in CI: `git config --global user.email "ci@mimo.ai"` / `user.name "mimo-ci"`.
+- Test preload (`test/preload.ts`) sets XDG env vars before any src imports and creates temp dirs.
+- Test fixtures: use `tmpdir()` from `test/fixture/fixture.ts` with `await using` for automatic cleanup.
+- Effect tests: use `testEffect(Layer)` from `test/lib/effect.ts`. Prefer `it.live(...)` for integration tests, `it.effect(...)` for pure Effect tests.
+- Avoid mocks. Test actual implementation.
+- Timeout: 30s per test.
 
-### Variables
+## Linting
 
-Prefer `const` over `let`. Use ternaries or early returns instead of reassignment.
+- **oxlint** (not ESLint). Config: `.oxlintrc.json` with `typeAware: true`.
+- Several Effect/SolidJS-specific rule overrides (e.g., `require-yield: off`, `no-unassigned-vars: off`).
+- Ignores: `**/node_modules`, `**/dist`, `**/.build`, `**/.sst`, `**/*.d.ts`, `**/sdk.gen.ts`.
 
-```ts
-// Good
-const foo = condition ? 1 : 2
+## CI
 
-// Bad
-let foo
-if (condition) foo = 1
-else foo = 2
-```
+Workflows in `.github/workflows/`:
+- `lint.yml` — runs `bun lint` on push/PR to `main`/`dev`.
+- `typecheck.yml` — runs `bun typecheck` on push/PR to `main`/`dev`.
+- `test.yml` — runs `bun run test:ci` from `packages/opencode` (4 shards, 8min timeout).
 
-### Control Flow
+## Git hooks
 
-Avoid `else` statements. Prefer early returns.
+- **Pre-push**: validates Bun version matches `packageManager` in root `package.json`, then runs `bun typecheck` (full Turborepo across all packages).
+- Untracked `.ts` files in `packages/opencode/` get picked up by typecheck — remove test artifacts before pushing.
 
-```ts
-// Good
-function foo() {
-  if (condition) return 1
-  return 2
-}
+## Code style
 
-// Bad
-function foo() {
-  if (condition) return 1
-  else return 2
-}
-```
+- **Prettier**: `semi: false`, `printWidth: 120` (root package.json). Ignores: `sst-env.d.ts`, `packages/desktop/src/bindings.ts`.
+- **EditorConfig**: UTF-8, LF line endings, 2-space indent, 80 char line length.
+- Keep logic in one function unless composable/reusable.
+- Avoid `try`/`catch` — prefer `.catch(...)` or early returns.
+- Avoid `any` type.
+- Prefer `const` over `let`. Use ternaries or early returns instead of reassignment.
+- Avoid `else` statements — prefer early returns.
+- Avoid unnecessary destructuring — use dot notation to preserve context.
+- Prefer functional array methods (`flatMap`, `filter`, `map`) over `for` loops.
+- Inline variables only used once.
+- Use Bun APIs when possible (`Bun.file()`, etc.).
+- Rely on type inference; avoid explicit type annotations unless needed for exports/clarity.
 
-### Schema Definitions (Drizzle)
+### Drizzle schema conventions
 
-Use snake_case for field names so column names don't need to be redefined as strings.
+Use snake_case for field names so column names don't need string redefinition:
 
 ```ts
 // Good
 const table = sqliteTable("session", {
   id: text().primaryKey(),
   project_id: text().notNull(),
-  created_at: integer().notNull(),
 })
 
 // Bad
 const table = sqliteTable("session", {
   id: text("id").primaryKey(),
   projectID: text("project_id").notNull(),
-  createdAt: integer("created_at").notNull(),
 })
 ```
 
-## Testing
+### Config module pattern
 
-- Avoid mocks as much as possible
-- Test actual implementation, do not duplicate logic into tests
-- Tests cannot run from repo root (guard: `do-not-run-tests-from-root`); run from package dirs like `packages/opencode`.
+In `src/config`, follow the existing self-export pattern at the top of the file when adding new config modules:
 
-## Type Checking
+```ts
+export * as ConfigAgent from "./agent"
+```
 
-- Always run `bun typecheck` from package directories (e.g., `packages/opencode`), never `tsc` directly.
+## PR conventions
+
+- PRs must reference an existing issue (`Fixes #123`).
+- PR titles follow conventional commits: `feat:`, `fix:`, `docs:`, `chore:`, `refactor:`, `test:`. Optional scope: `feat(app):`.
+- UI changes require screenshots/videos.
+- No AI-generated walls of text.

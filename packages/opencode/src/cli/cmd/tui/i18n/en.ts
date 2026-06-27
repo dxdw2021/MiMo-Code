@@ -390,6 +390,14 @@ export const dict: Record<string, string> = {
   "tui.command.prompt.stash.title": "Stash prompt",
   "tui.command.prompt.stash.pop.title": "Stash pop",
   "tui.command.prompt.stash.list.title": "Stash list",
+  "tui.dialog.stash.title": "Stash",
+  "tui.dialog.stash.delete": "delete",
+  "tui.dialog.stash.just_now": "just now",
+  "tui.dialog.stash.minutes_ago": "{{n}}m ago",
+  "tui.dialog.stash.hours_ago": "{{n}}h ago",
+  "tui.dialog.stash.days_ago": "{{n}}d ago",
+  "tui.plugin.route_missing": "Unknown plugin route: {{route}}",
+  "tui.plugin.go_home": "go home",
 
   // Tips toggle / Plugins
   "tui.command.tips.toggle.show": "Show tips",
@@ -462,4 +470,29 @@ export const dict: Record<string, string> = {
   "trust.dangerous.advice_root": "Unless you have a very specific reason, DO NOT trust the filesystem root.",
   "trust.dangerous.option.yes": "I understand the risks, trust for this session",
   "trust.dangerous.option.no": "Exit (recommended)",
+
+  // session/index.tsx - UI text (thinking, expand/collapse, etc.)
+  "tui.session.ui.thinking": "Thinking",
+  "tui.session.ui.thought": "Thought",
+  "tui.session.ui.expand": "Click to expand",
+  "tui.session.ui.collapse": "Click to collapse",
+  "tui.session.ui.queued": "QUEUED",
+  "tui.session.ui.output_limit": "Output length limit reached",
+  "tui.session.ui.match": "match",
+  "tui.session.ui.matches": "matches",
+  "tui.session.ui.line": "line",
+  "tui.session.ui.lines": "lines",
+
+  // Agent/mode names
+  "tui.agent.build": "Build",
+  "tui.agent.plan": "Plan",
+  "tui.agent.compose": "Compose",
+  "tui.agent.shell": "Shell",
+  "tui.agent.general": "General",
+
+  // Model UI
+  "tui.model.free": "Free",
+  "tui.model.high": "High",
+  "tui.model.medium": "Medium",
+  "tui.model.low": "Low",
 }
