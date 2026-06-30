@@ -18,6 +18,9 @@ export default [
             "@": fileURLToPath(new URL("./src", import.meta.url)),
           },
         },
+        css: {
+          transformer: "lightningcss",
+        },
         worker: {
           format: "es",
         },

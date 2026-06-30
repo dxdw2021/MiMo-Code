@@ -8,7 +8,7 @@ import { usePrompt } from "@/context/prompt"
 import { useSync } from "@/context/sync"
 import { getSessionHandoff, setSessionHandoff } from "@/pages/session/handoff"
 import { useSessionKey } from "@/pages/session/session-layout"
-import { SessionPermissionDock } from "@/pages/session/composer/session-permission-dock"
+import { PermissionDialog } from "@/pages/session/composer/session-permission-dialog"
 import { SessionQuestionDock } from "@/pages/session/composer/session-question-dock"
 import { SessionFollowupDock } from "@/pages/session/composer/session-followup-dock"
 import { SessionRevertDock } from "@/pages/session/composer/session-revert-dock"
@@ -157,16 +157,18 @@ export function SessionComposerRegion(props: {
 
         <Show when={props.state.permissionRequest()} keyed>
           {(request) => (
-            <div>
-              <SessionPermissionDock
-                request={request}
-                responding={props.state.permissionResponding()}
-                onDecide={(response) => {
-                  props.onResponseSubmit()
-                  props.state.decide(response)
-                }}
-              />
-            </div>
+            <PermissionDialog
+              request={request}
+              responding={props.state.permissionResponding()}
+              onDecide={(response) => {
+                props.onResponseSubmit()
+                props.state.decide(response)
+              }}
+              onClose={() => {
+                props.onResponseSubmit()
+                props.state.decide("reject")
+              }}
+            />
           )}
         </Show>
 
