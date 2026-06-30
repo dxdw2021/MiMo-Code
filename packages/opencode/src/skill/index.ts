@@ -18,6 +18,7 @@ import { Log } from "../util"
 import { Discovery } from "./discovery"
 import { extractComposeBundle } from "./compose/extract"
 import { extractBuiltinBundle } from "./builtin/extract"
+import { SkillDescriptionTranslations } from "./translations"
 
 const log = Log.create({ service: "skill" })
 const EXTERNAL_DIRS = [".claude", ".agents", ".codex", ".opencode"]
@@ -300,28 +301,34 @@ export const defaultLayer = layer.pipe(
 )
 
 export function fmt(list: Info[], opts: { verbose: boolean }) {
-  if (list.length === 0) return "No skills are currently available."
+  if (list.length === 0) return "当前没有可用的技能。"
   if (opts.verbose) {
     return [
       "<available_skills>",
       ...list
         .sort((a, b) => a.name.localeCompare(b.name))
-        .flatMap((skill) => [
-          "  <skill>",
-          `    <name>${skill.name}</name>`,
-          `    <description>${skill.description}</description>`,
-          `    <location>${pathToFileURL(skill.location).href}</location>`,
-          "  </skill>",
-        ]),
+        .flatMap((skill) => {
+          const description = SkillDescriptionTranslations[skill.name] || skill.description
+          return [
+            "  <skill>",
+            `    <name>${skill.name}</name>`,
+            `    <description>${description}</description>`,
+            `    <location>${pathToFileURL(skill.location).href}</location>`,
+            "  </skill>",
+          ]
+        }),
       "</available_skills>",
     ].join("\n")
   }
 
   return [
-    "## Available Skills",
+    "## 可用技能",
     ...list
       .toSorted((a, b) => a.name.localeCompare(b.name))
-      .map((skill) => `- **${skill.name}**: ${skill.description}`),
+      .map((skill) => {
+        const description = SkillDescriptionTranslations[skill.name] || skill.description
+        return `- **${skill.name}**: ${description}`
+      }),
   ].join("\n")
 }
 

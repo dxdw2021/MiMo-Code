@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<title>Mimo Auto Test</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, sans-serif; background: #1a1a1a; color: #e0e0e0; height: 100vh; display: flex; flex-direction: column; }
+  .header { padding: 12px 20px; background: #222; border-bottom: 1px solid #333; display: flex; align-items: center; gap: 12px; }
+  .header h1 { font-size: 16px; font-weight: 500; }
+  .status { font-size: 12px; padding: 4px 10px; border-radius: 12px; background: #333; }
+  .status.ok { background: #1a4a1a; color: #4ade80; }
+  .status.err { background: #4a1a1a; color: #f87171; }
+  .messages { flex: 1; overflow-y: auto; padding: 20px; }
+  .msg { margin-bottom: 16px; max-width: 800px; }
+  .msg.user { margin-left: auto; }
+  .msg .role { font-size: 11px; color: #888; margin-bottom: 4px; text-transform: uppercase; }
+  .msg .content { padding: 12px 16px; border-radius: 12px; line-height: 1.6; white-space: pre-wrap; word-break: break-word; }
+  .msg.user .content { background: #2563eb; color: #fff; border-bottom-right-radius: 4px; }
+  .msg.assistant .content { background: #2a2a2a; border-bottom-left-radius: 4px; }
+  .msg.thinking .content { background: #1a2a1a; border: 1px solid #333; color: #aaa; font-size: 13px; }
+  .input-area { padding: 16px 20px; background: #222; border-top: 1px solid #333; display: flex; gap: 12px; }
+  .input-area textarea { flex: 1; background: #333; border: 1px solid #444; border-radius: 8px; padding: 12px; color: #fff; font-size: 14px; resize: none; height: 80px; font-family: inherit; }
+  .input-area textarea:focus { outline: none; border-color: #2563eb; }
+  .input-area button { padding: 0 24px; background: #2563eb; color: #fff; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; }
+  .input-area button:hover { background: #1d4ed8; }
+  .input-area button:disabled { background: #444; cursor: not-allowed; }
+  .settings { padding: 8px 20px; background: #1e1e1e; border-bottom: 1px solid #333; display: flex; gap: 12px; align-items: center; font-size: 13px; color: #888; }
+  .settings input { background: #333; border: 1px solid #444; border-radius: 4px; padding: 4px 8px; color: #fff; font-size: 13px; width: 300px; }
+  .settings label { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+  .settings input[type="checkbox"] { width: auto; }
+</style>
+</head>
+<body>
+
+<div class="settings">
+  <label>API:</label>
+  <input id="apiBase" value="http://127.0.0.1:18080/v1" />
+  <label><input type="checkbox" id="stream" checked /> Stream</label>
+  <label><input type="checkbox" id="showThinking" /> Show Thinking</label>
+</div>
+
+<div class="header">
+  <h1>Mimo Auto</h1>
+  <span class="status" id="status">checking...</span>
+</div>
+
+<div class="messages" id="messages"></div>
+
+<div class="input-area">
+  <textarea id="input" placeholder="Enter message..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();send()}"></textarea>
+  <button id="btn" onclick="send()">Send</button>
+</div>
+
+<script>
+const messages = document.getElementById("messages");
+const input = document.getElementById("input");
+const btn = document.getElementById("btn");
+const status = document.getElementById("status");
+const apiBase = document.getElementById("apiBase");
+const stream = document.getElementById("stream");
+const showThinking = document.getElementById("showThinking");
+
+let chatHistory = [];
+
+async function checkStatus() {
+  try {
+    const res = await fetch(apiBase.value + "/models");
+    if (res.ok) { status.textContent = "connected"; status.className = "status ok"; return; }
+  } catch {}
+  status.textContent = "disconnected"; status.className = "status err";
+}
+checkStatus();
+
+function addMsg(role, content, thinking) {
+  const div = document.createElement("div");
+  div.className = "msg " + role;
+  div.innerHTML = `<div class="role">${role}</div><div class="content"></div>`;
+  const contentEl = div.querySelector(".content");
+  messages.appendChild(div);
+  if (thinking) {
+    const tDiv = document.createElement("div");
+    tDiv.className = "msg thinking";
+    tDiv.innerHTML = `<div class="role">thinking</div><div class="content">${escapeHtml(thinking)}</div>`;
+    messages.insertBefore(tDiv, div);
+  }
+  return contentEl;
+}
+
+function escapeHtml(s) {
+  return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+async function send() {
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = "";
+  btn.disabled = true;
+
+  addMsg("user", text);
+  chatHistory.push({ role: "user", content: text });
+
+  const resEl = addMsg("assistant", "");
+  let fullText = "";
+  let thinkingText = "";
+
+  try {
+    const res = await fetch(apiBase.value + "/chat/completions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "mimo-auto",
+        messages: chatHistory,
+        stream: stream.checked,
+      }),
+    });
+
+    if (!res.ok) {
+      const err = await res.text();
+      resEl.textContent = "Error: " + res.status + " " + err;
+      btn.disabled = false;
+      return;
+    }
+
+    if (stream.checked) {
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = "";
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split("\n");
+        buffer = lines.pop();
+
+        for (const line of lines) {
+          if (!line.startsWith("data: ")) continue;
+          const data = line.slice(6).trim();
+          if (data === "[DONE]") break;
+
+          try {
+            const json = JSON.parse(data);
+            const delta = json.choices?.[0]?.delta;
+            if (!delta) continue;
+
+            if (delta.reasoning_content) {
+              thinkingText += delta.reasoning_content;
+              if (showThinking.checked) {
+                const tEl = messages.querySelector(".msg.thinking:last-of-type .content") ||
+                            (() => { const d = document.createElement("div"); d.className = "msg thinking"; d.innerHTML = `<div class="role">thinking</div><div class="content"></div>`; messages.insertBefore(d, resEl.closest(".msg")); return d.querySelector(".content"); })();
+                tEl.textContent = thinkingText;
+              }
+            }
+
+            if (delta.content) {
+              fullText += delta.content;
+              resEl.textContent = fullText;
+            }
+          } catch {}
+        }
+      }
+    } else {
+      const json = await res.json();
+      fullText = json.choices?.[0]?.message?.content ?? "";
+      thinkingText = json.choices?.[0]?.message?.reasoning_content ?? "";
+      resEl.textContent = fullText;
+      if (thinkingText && showThinking.checked) {
+        const tDiv = document.createElement("div");
+        tDiv.className = "msg thinking";
+        tDiv.innerHTML = `<div class="role">thinking</div><div class="content">${escapeHtml(thinkingText)}</div>`;
+        messages.insertBefore(tDiv, resEl.closest(".msg"));
+      }
+    }
+
+    chatHistory.push({ role: "assistant", content: fullText });
+  } catch (err) {
+    resEl.textContent = "Error: " + err.message;
+  }
+
+  btn.disabled = false;
+  messages.scrollTop = messages.scrollHeight;
+}
+</script>
+</body>
+</html>
