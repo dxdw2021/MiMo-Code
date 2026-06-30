@@ -117,6 +117,23 @@ export function Prompt(props: PromptProps) {
   const dialog = useDialog()
   const toast = useToast()
   const status = createMemo(() => sync.data.session_status?.[props.sessionID ?? ""] ?? { type: "idle" })
+
+  // Clear stale retry status when the user switches models.  The server only
+  // updates session_status on prompt completion, so a leftover rate-limit
+  // message from a previous model persists until the next prompt fires.
+  createEffect(
+    on(
+      () => local.model.current()?.modelID,
+      (_prev, curr) => {
+        if (!curr || !props.sessionID) return
+        const s = sync.data.session_status?.[props.sessionID]
+        if (s && s.type === "retry") {
+          sync.set("session_status", props.sessionID, { type: "idle" })
+        }
+      },
+      { defer: true },
+    ),
+  )
   const history = usePromptHistory()
   const stash = usePromptStash()
   const command = useCommandDialog()
@@ -1818,18 +1835,18 @@ export function Prompt(props: PromptProps) {
               </text>
             </box>
           </Show>
-          <Show when={status().type !== "retry"}>
-            <box gap={2} flexGrow={1} flexDirection="row" justifyContent="space-between">
-              <Switch>
-                <Match when={store.mode === "normal"}>
-                  <box gap={2} flexDirection="row">
-                    <Show when={usage()}>
-                      {(item) => (
-                        <text fg={theme.textMuted} wrapMode="none">
-                          {[item().context, item().cost].filter(Boolean).join(" · ")}
-                        </text>
-                      )}
-                    </Show>
+          <box gap={2} flexGrow={1} flexDirection="row" justifyContent="space-between">
+            <Switch>
+              <Match when={store.mode === "normal"}>
+                <box gap={2} flexDirection="row">
+                  <Show when={usage()}>
+                    {(item) => (
+                      <text fg={theme.textMuted} wrapMode="none">
+                        {[item().context, item().cost].filter(Boolean).join(" · ")}
+                      </text>
+                    )}
+                  </Show>
+                  <Show when={status().type !== "retry"}>
                     <text fg={theme.text}>
                       {keybind.print("agent_cycle")} <span style={{ fg: theme.textMuted }}>{t("tui.prompt.hint.switch_mode")}</span>
                     </text>
@@ -1837,21 +1854,22 @@ export function Prompt(props: PromptProps) {
                       {keybind.print("command_list")}{" "}
                       <span style={{ fg: theme.textMuted }}>{t("tui.prompt.hint.settings")}</span>
                     </text>
-                  </box>
-                  <Show when={status().type === "idle"}>
-                    <box gap={2} flexDirection="row">
-                      <text fg={theme.text}>
-                        @ <span style={{ fg: theme.textMuted }}>{t("tui.prompt.hint.attach_file")}</span>
-                      </text>
-                      <text fg={theme.text}>
-                        $ <span style={{ fg: theme.textMuted }}>{t("tui.prompt.hint.subagent")}</span>
-                      </text>
-                      <text fg={theme.text}>
-                        / <span style={{ fg: theme.textMuted }}>{t("tui.prompt.hint.commands")}</span>
-                      </text>
-                    </box>
                   </Show>
-                </Match>
+                </box>
+                <Show when={status().type === "idle"}>
+                  <box gap={2} flexDirection="row">
+                    <text fg={theme.text}>
+                      @ <span style={{ fg: theme.textMuted }}>{t("tui.prompt.hint.attach_file")}</span>
+                    </text>
+                    <text fg={theme.text}>
+                      $ <span style={{ fg: theme.textMuted }}>{t("tui.prompt.hint.subagent")}</span>
+                    </text>
+                    <text fg={theme.text}>
+                      / <span style={{ fg: theme.textMuted }}>{t("tui.prompt.hint.commands")}</span>
+                    </text>
+                  </box>
+                </Show>
+              </Match>
                 <Match when={store.mode === "shell"}>
                   <box flexGrow={1} flexDirection="row" justifyContent="flex-end">
                     <text fg={theme.text}>
@@ -1861,7 +1879,6 @@ export function Prompt(props: PromptProps) {
                 </Match>
               </Switch>
             </box>
-          </Show>
         </box>
       </box>
     </>
