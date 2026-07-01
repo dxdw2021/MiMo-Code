@@ -526,4 +526,10 @@ export const dict = {
   "tui.dialog.login.flow.waiting": "Esperando autorización del navegador...",
   "tui.dialog.login.flow.invalid_code": "Código inválido, intenta de nuevo",
   "tui.dialog.login.flow.copied": "Copiado",
+
+  // session/index.tsx - UI text (revert/redo)
+  "tui.session.ui.revert_confirm": "¿Está seguro de que desea restaurar los mensajes deshechos?",
+  "tui.session.ui.revert_count": "{{count}} mensaje deshecho",
+  "tui.session.ui.revert_count_plural": "{{count}} mensajes deshechos",
+  "tui.session.ui.revert_hint": "o /redo para restaurar",
 } satisfies Partial<Record<Keys, string>>

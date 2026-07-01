@@ -161,6 +161,9 @@ export function createTuiPluginApi(opts: Opts = {}): HostPluginApi {
         return opts.app?.version ?? "0.0.0-test"
       },
     },
+    i18n: {
+      t: (key: string, params?: Record<string, string | number | boolean>) => key,
+    },
     get client() {
       return client()
     },

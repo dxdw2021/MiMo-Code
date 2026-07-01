@@ -473,6 +473,9 @@ export type TuiWorkspace = {
 
 export type TuiPluginApi = {
   app: TuiApp
+  i18n: {
+    t: (key: string, params?: Record<string, string | number | boolean>) => string
+  }
   command: {
     register: (cb: () => TuiCommand[]) => () => void
     trigger: (value: string) => void

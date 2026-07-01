@@ -481,4 +481,10 @@ export const dict = {
   "trust.dangerous.advice_root": "明確な理由がない限り、ファイルシステムのルートを信頼しないでください。",
   "trust.dangerous.option.yes": "リスクを理解した上で、今回のみ信頼する",
   "trust.dangerous.option.no": "終了（推奨）",
+
+  // session/index.tsx - UI text (revert/redo)
+  "tui.session.ui.revert_confirm": "取り消したメッセージを復元しますか？",
+  "tui.session.ui.revert_count": "{{count}} 件のメッセージが取り消されました",
+  "tui.session.ui.revert_count_plural": "{{count}} 件のメッセージが取り消されました",
+  "tui.session.ui.revert_hint": "または /redo で復元",
 } satisfies Partial<Record<Keys, string>>

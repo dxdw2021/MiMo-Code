@@ -533,4 +533,10 @@ export const dict = {
   "trust.dangerous.advice_root": "Sauf raison très spécifique, NE faites PAS confiance à la racine du système de fichiers.",
   "trust.dangerous.option.yes": "Je comprends les risques, faire confiance pour cette session",
   "trust.dangerous.option.no": "Quitter (recommandé)",
+
+  // session/index.tsx - UI text (revert/redo)
+  "tui.session.ui.revert_confirm": "Êtes-vous sûr de vouloir restaurer les messages annulés ?",
+  "tui.session.ui.revert_count": "{{count}} message annulé",
+  "tui.session.ui.revert_count_plural": "{{count}} messages annulés",
+  "tui.session.ui.revert_hint": "ou /redo pour restaurer",
 } satisfies Partial<Record<Keys, string>>

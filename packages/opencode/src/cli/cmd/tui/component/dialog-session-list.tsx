@@ -54,6 +54,7 @@ export function DialogSessionList() {
             sync,
             toast,
             workspaceID,
+            t,
           })
         }
       />
@@ -75,7 +76,7 @@ export function DialogSessionList() {
           if (result.error) {
             toast.show({
               variant: "error",
-              title: "Failed to delete workspace",
+              title: t("tui.dialog.session.delete_workspace"),
               message: errorMessage(result.error),
             })
             return false
@@ -101,6 +102,7 @@ export function DialogSessionList() {
                   workspaceID,
                   sessionID: session.id,
                   done: list,
+                  t,
                 })
               }
             />
@@ -217,7 +219,7 @@ export function DialogSessionList() {
                   } else {
                     toast.show({
                       variant: "error",
-                      title: "Failed to delete session",
+                      title: t("tui.dialog.session.delete_failed"),
                       message: errorMessage(result.error),
                     })
                   }
@@ -230,7 +232,7 @@ export function DialogSessionList() {
                 } else {
                   toast.show({
                     variant: "error",
-                    title: "Failed to delete session",
+                    title: t("tui.dialog.session.delete_failed"),
                     message: errorMessage(err),
                   })
                 }

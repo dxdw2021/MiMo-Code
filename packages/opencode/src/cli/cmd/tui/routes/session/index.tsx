@@ -449,7 +449,7 @@ export function Session() {
           .then((res) => copy(res.data!.share!.url))
           .catch((error) => {
             toast.show({
-              message: error instanceof Error ? error.message : "Failed to share session",
+              message: error instanceof Error ? error.message : t("tui.toast.share_failed"),
               variant: "error",
             })
           })
@@ -555,10 +555,10 @@ export function Session() {
           .unshare({
             sessionID: route.sessionID,
           })
-          .then(() => toast.show({ message: "Session unshared successfully", variant: "success" }))
+          .then(() => toast.show({ message: t("tui.toast.unshare_success"), variant: "success" }))
           .catch((error) => {
             toast.show({
-              message: error instanceof Error ? error.message : "Failed to unshare session",
+              message: error instanceof Error ? error.message : t("tui.toast.unshare_failed"),
               variant: "error",
             })
           })
@@ -865,7 +865,7 @@ export function Session() {
           (msg) => msg.role === "assistant" && (!revertID || msg.id < revertID),
         )
         if (!lastAssistantMessage) {
-          toast.show({ message: "No assistant messages found", variant: "error" })
+          toast.show({ message: t("tui.toast.no_assistant"), variant: "error" })
           dialog.clear()
           return
         }
@@ -873,7 +873,7 @@ export function Session() {
         const parts = sync.data.part[lastAssistantMessage.id] ?? []
         const textParts = parts.filter((part) => part.type === "text")
         if (textParts.length === 0) {
-          toast.show({ message: "No text parts found in last assistant message", variant: "error" })
+          toast.show({ message: t("tui.toast.no_text_parts"), variant: "error" })
           dialog.clear()
           return
         }
@@ -884,7 +884,7 @@ export function Session() {
           .trim()
         if (!text) {
           toast.show({
-            message: "No text content found in last assistant message",
+            message: t("tui.toast.no_text_content"),
             variant: "error",
           })
           dialog.clear()
@@ -892,8 +892,8 @@ export function Session() {
         }
 
         Clipboard.copy(text)
-          .then(() => toast.show({ message: "Message copied to clipboard!", variant: "success" }))
-          .catch(() => toast.show({ message: "Failed to copy to clipboard", variant: "error" }))
+          .then(() => toast.show({ message: t("tui.toast.copy_success"), variant: "success" }))
+          .catch(() => toast.show({ message: t("tui.toast.copy_failed"), variant: "error" }))
         dialog.clear()
       },
     },
@@ -920,9 +920,9 @@ export function Session() {
             },
           )
           await Clipboard.copy(transcript)
-          toast.show({ message: "Session transcript copied to clipboard!", variant: "success" })
+          toast.show({ message: t("tui.toast.transcript_copied"), variant: "success" })
         } catch {
-          toast.show({ message: "Failed to copy session transcript", variant: "error" })
+          toast.show({ message: t("tui.toast.transcript_copy_failed"), variant: "error" })
         }
         dialog.clear()
       },
@@ -984,7 +984,7 @@ export function Session() {
             toast.show({ message: `Session exported to ${filename}`, variant: "success" })
           }
         } catch {
-          toast.show({ message: "Failed to export session", variant: "error" })
+          toast.show({ message: t("tui.toast.export_failed"), variant: "error" })
         }
         dialog.clear()
       },
@@ -1147,12 +1147,13 @@ export function Session() {
                         const command = useCommandDialog()
                         const [hover, setHover] = createSignal(false)
                         const dialog = useDialog()
+                        const t = useLanguage().t
 
                         const handleUnrevert = async () => {
                           const confirmed = await DialogConfirm.show(
                             dialog,
-                            "Confirm Redo",
-                            "Are you sure you want to restore the reverted messages?",
+                            t("tui.command.session.redo.title"),
+                            t("tui.session.ui.revert_confirm"),
                           )
                           if (confirmed) {
                             command.trigger("session.redo")
@@ -1176,10 +1177,9 @@ export function Session() {
                               paddingLeft={2}
                               backgroundColor={hover() ? theme.backgroundElement : theme.backgroundPanel}
                             >
-                              <text fg={theme.textMuted}>{revert()!.reverted.length} message reverted</text>
+                              <text fg={theme.textMuted}>{t("tui.session.ui.revert_count", { count: revert()!.reverted.length })}</text>
                               <text fg={theme.textMuted}>
-                                <span style={{ fg: theme.text }}>{keybind.print("messages_redo")}</span> or /redo to
-                                restore
+                                <span style={{ fg: theme.text }}>{keybind.print("messages_redo")}</span> {t("tui.session.ui.revert_hint")}
                               </text>
                               <Show when={revert()!.diffFiles?.length}>
                                 <box marginTop={1}>
@@ -1432,7 +1432,7 @@ function AssistantMessage(props: { message: AssistantMessage; parts: Part[]; las
     if (!text) return
     Clipboard.copy(text)
       .then(() => toast.show({ message: t("tui.toast.copied_to_clipboard"), variant: "success" }))
-      .catch(() => toast.show({ message: "Failed to copy to clipboard", variant: "error" }))
+      .catch(() => toast.show({ message: t("tui.toast.copy_failed"), variant: "error" }))
   }
 
   // Goal judge verdict for this specific turn, if the stop-condition judge
@@ -1886,6 +1886,7 @@ function PlanExit(props: ToolProps<any>) {
 
 function GenericTool(props: ToolProps<any>) {
   const { theme } = useTheme()
+  const t = useLanguage().t
   const ctx = use()
   const output = createMemo(() => props.output?.trim() ?? "")
   const [expanded, setExpanded] = createSignal(false)
@@ -1914,7 +1915,7 @@ function GenericTool(props: ToolProps<any>) {
         <box gap={1}>
           <text fg={theme.text}>{limited()}</text>
           <Show when={overflow()}>
-            <text fg={theme.textMuted}>{expanded() ? "Click to collapse" : "Click to expand"}</text>
+            <text fg={theme.textMuted}>{expanded() ? t("tui.session.ui.collapse") : t("tui.session.ui.expand")}</text>
           </Show>
         </box>
       </BlockTool>
@@ -2520,6 +2521,7 @@ function hasLongDisplayLine(content: string) {
 
 function Bash(props: ToolProps<typeof BashTool>) {
   const { theme } = useTheme()
+  const t = useLanguage().t
   const sync = useSync()
   const isRunning = createMemo(() => props.part.state.status === "running")
   const output = createMemo(() => stripAnsi(props.metadata.output?.trim() ?? ""))
@@ -2571,7 +2573,7 @@ function Bash(props: ToolProps<typeof BashTool>) {
               <text fg={theme.text}>{limited()}</text>
             </Show>
             <Show when={overflow()}>
-              <text fg={theme.textMuted}>{expanded() ? "Click to collapse" : "Click to expand"}</text>
+              <text fg={theme.textMuted}>{expanded() ? t("tui.session.ui.collapse") : t("tui.session.ui.expand")}</text>
             </Show>
           </box>
         </BlockTool>

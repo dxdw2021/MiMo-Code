@@ -226,8 +226,8 @@ export const { use: useLocal, provider: LocalProvider } = createSimpleContext({
           const value = currentModel()
           if (!value) {
             return {
-              provider: "Connect a provider",
-              model: "No provider selected",
+              provider: t("tui.dialog.provider.connect"),
+              model: t("tui.dialog.model.no_provider"),
               reasoning: false,
             }
           }

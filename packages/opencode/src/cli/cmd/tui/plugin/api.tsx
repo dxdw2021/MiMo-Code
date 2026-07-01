@@ -42,6 +42,7 @@ type Input = {
   theme: ReturnType<typeof useTheme>
   toast: ReturnType<typeof useToast>
   renderer: TuiPluginApi["renderer"]
+  t: (key: string, params?: Record<string, string | number | boolean>) => string
 }
 
 function routeRegister(routes: RouteMap, list: TuiRouteDefinition[], bump: () => void) {
@@ -216,6 +217,9 @@ export function createTuiApi(input: Input): TuiPluginApi {
 
   return {
     app: appApi(),
+    i18n: {
+      t: input.t,
+    },
     command: {
       register(cb) {
         return input.command.register(() => cb())

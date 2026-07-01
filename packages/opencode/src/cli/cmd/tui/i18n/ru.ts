@@ -545,4 +545,10 @@ export const dict = {
   "trust.dangerous.advice_root": "Если нет весомой причины, НЕ доверяйте корню файловой системы.",
   "trust.dangerous.option.yes": "Я понимаю риски, доверять только в этой сессии",
   "trust.dangerous.option.no": "Выйти (рекомендуется)",
+
+  // session/index.tsx - UI text (revert/redo)
+  "tui.session.ui.revert_confirm": "Вы уверены, что хотите восстановить отменённые сообщения?",
+  "tui.session.ui.revert_count": "{{count}} сообщение отменено",
+  "tui.session.ui.revert_count_plural": "{{count}} сообщений отменено",
+  "tui.session.ui.revert_hint": "или /redo для восстановления",
 } satisfies Partial<Record<Keys, string>>

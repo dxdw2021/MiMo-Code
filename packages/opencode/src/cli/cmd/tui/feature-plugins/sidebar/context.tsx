@@ -13,6 +13,7 @@ const money = new Intl.NumberFormat("en-US", {
 
 function View(props: { api: TuiPluginApi; session_id: string }) {
   const theme = () => props.api.theme.current
+  const t = props.api.i18n.t
   const msg = createMemo(() => props.api.state.session.messages(props.session_id))
   const cost = createMemo(() => msg().reduce((sum, item) => sum + (item.role === "assistant" ? item.cost : 0), 0))
 
@@ -85,12 +86,12 @@ function View(props: { api: TuiPluginApi; session_id: string }) {
   return (
     <box>
       <text fg={theme().text}>
-        <b>Context</b>
+        <b>{t("tui.sidebar.context.title")}</b>
       </text>
-      <text fg={theme().textMuted}>{state().tokens.toLocaleString()} tokens</text>
-      <text fg={theme().textMuted}>{state().percent ?? 0}% used</text>
+      <text fg={theme().textMuted}>{state().tokens.toLocaleString()} {t("tui.sidebar.context.tokens")}</text>
+      <text fg={theme().textMuted}>{state().percent ?? 0}{t("tui.sidebar.context.used")}</text>
       <Show when={tpsLabel()}>{(label) => <text fg={theme().textMuted}>{label()}</text>}</Show>
-      <text fg={theme().textMuted}>{money.format(cost())} spent</text>
+      <text fg={theme().textMuted}>{money.format(cost())} {t("tui.sidebar.context.spent")}</text>
     </box>
   )
 }

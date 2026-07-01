@@ -19,6 +19,7 @@ function View(props: { api: TuiPluginApi; session_id: string }) {
   const [open, setOpen] = createSignal(true)
   const [doneExpanded, setDoneExpanded] = createSignal(false)
   const theme = () => props.api.theme.current
+  const t = props.api.i18n.t
   const all = createMemo(() => props.api.state.session.task(props.session_id))
   // Active work, ordered in_progress → open(todo) → blocked; ties broken by id
   // so same-status rows keep a stable order across polls (no visual jitter).
@@ -48,7 +49,7 @@ function View(props: { api: TuiPluginApi; session_id: string }) {
             <text fg={theme().text}>{open() ? "▼" : "▶"}</text>
           </Show>
           <text fg={theme().text}>
-            <b>Tasks</b>
+            <b>{t("tui.sidebar.task.title")}</b>
           </text>
         </box>
         <Show when={!collapsible() || open()}>
@@ -66,7 +67,7 @@ function View(props: { api: TuiPluginApi; session_id: string }) {
           <Show when={hiddenDoneCount() > 0 || doneExpanded()}>
             <box flexDirection="row" gap={0} onMouseDown={() => setDoneExpanded((x) => !x)}>
               <text fg={theme().textMuted}>
-                {doneExpanded() ? "  ▾ fewer done" : `  ▸ ${hiddenDoneCount()} more done`}
+                {doneExpanded() ? `  ▾ ${t("tui.sidebar.task.fewer")}` : `  ▸ ${hiddenDoneCount()} ${t("tui.sidebar.task.more")}`}
               </text>
             </box>
           </Show>

@@ -448,4 +448,10 @@ export const dict = {
   "tui.dialog.login.flow.waiting": "等待瀏覽器授權中...",
   "tui.dialog.login.flow.invalid_code": "Code 無效，請重試",
   "tui.dialog.login.flow.copied": "已複製",
+
+  // session/index.tsx - UI text (revert/redo)
+  "tui.session.ui.revert_confirm": "確定要還原已復原的訊息嗎？",
+  "tui.session.ui.revert_count": "{{count}} 條訊息已復原",
+  "tui.session.ui.revert_count_plural": "{{count}} 條訊息已復原",
+  "tui.session.ui.revert_hint": "或使用 /redo 還原",
 } satisfies Partial<Record<Keys, string>>

@@ -73,7 +73,7 @@ function Install(props: { api: TuiPluginApi }) {
         if (!mod) {
           props.api.ui.toast({
             variant: "error",
-            message: "Plugin package name is required",
+            message: props.api.i18n.t("tui.toast.plugin_name_required"),
           })
           return
         }
@@ -90,7 +90,7 @@ function Install(props: { api: TuiPluginApi }) {
               if (out.missing) {
                 props.api.ui.toast({
                   variant: "info",
-                  message: "Check npm registry/auth settings and try again.",
+                  message: props.api.i18n.t("tui.toast.plugin_check_registry"),
                 })
               }
               show(props.api)
@@ -99,12 +99,12 @@ function Install(props: { api: TuiPluginApi }) {
 
             props.api.ui.toast({
               variant: "success",
-              message: `Installed ${mod} (${global() ? "global" : "local"}: ${out.dir})`,
+              message: props.api.i18n.t("tui.toast.plugin_installed", { name: mod, scope: global() ? "global" : "local", path: out.dir }),
             })
             if (!out.tui) {
               props.api.ui.toast({
                 variant: "info",
-                message: "Package has no TUI target to load in this app.",
+                message: props.api.i18n.t("tui.toast.plugin_no_tui"),
               })
               show(props.api)
               return
@@ -114,7 +114,7 @@ function Install(props: { api: TuiPluginApi }) {
               if (!ok) {
                 props.api.ui.toast({
                   variant: "warning",
-                  message: "Installed plugin, but runtime load failed. See console/logs; restart TUI to retry.",
+                  message: props.api.i18n.t("tui.toast.plugin_load_failed"),
                 })
                 show(props.api)
                 return

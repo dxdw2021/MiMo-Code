@@ -383,7 +383,7 @@ export function Prompt(props: PromptProps) {
   function promptModelWarning() {
     toast.show({
       variant: "warning",
-      message: "Connect a provider to send prompts",
+      message: t("tui.toast.connect_provider"),
       duration: 3000,
     })
     if (sync.data.provider.length === 0) {
@@ -1079,6 +1079,7 @@ export function Prompt(props: PromptProps) {
                     toast,
                     workspaceID: nextWorkspaceID,
                     sessionID: props.sessionID!,
+                    t,
                   })
                 }
               />
@@ -1097,7 +1098,7 @@ export function Prompt(props: PromptProps) {
         console.log("Creating a session failed:", res.error)
 
         toast.show({
-          message: "Creating a session failed. Open console for more details.",
+          message: t("tui.toast.session_create_failed"),
           variant: "error",
         })
 
@@ -1197,7 +1198,7 @@ export function Prompt(props: PromptProps) {
         })
         .catch((err) => {
           toast.show({
-            message: err instanceof Error ? err.message : "Failed to send message",
+            message: err instanceof Error ? err.message : t("tui.toast.send_failed"),
             variant: "error",
           })
         })
@@ -1646,7 +1647,7 @@ export function Prompt(props: PromptProps) {
                   {(agent) => (
                     <>
                       <text fg={fadeColor(highlight(), agentMetaAlpha())}>
-                        {store.mode === "shell" ? "Shell" : Locale.titlecase(agent().name)}
+                        {store.mode === "shell" ? t("tui.agent.shell") : t(`tui.agent.${agent().name}`) || Locale.titlecase(agent().name)}
                       </text>
                       <Show when={store.mode === "normal"}>
                         <box flexDirection="row" gap={1}>
@@ -1830,7 +1831,7 @@ export function Prompt(props: PromptProps) {
               <text fg={store.interrupt > 0 ? theme.primary : theme.text}>
                 esc{" "}
                 <span style={{ fg: store.interrupt > 0 ? theme.primary : theme.textMuted }}>
-                  {store.interrupt > 0 ? "again to interrupt" : "interrupt"}
+                  {store.interrupt > 0 ? t("tui.prompt.interrupt_again") : t("tui.prompt.interrupt")}
                 </span>
               </text>
             </box>
@@ -1873,7 +1874,7 @@ export function Prompt(props: PromptProps) {
                 <Match when={store.mode === "shell"}>
                   <box flexGrow={1} flexDirection="row" justifyContent="flex-end">
                     <text fg={theme.text}>
-                      esc <span style={{ fg: theme.textMuted }}>exit shell mode</span>
+                      esc <span style={{ fg: theme.textMuted }}>{t("tui.prompt.exit_shell")}</span>
                     </text>
                   </box>
                 </Match>
