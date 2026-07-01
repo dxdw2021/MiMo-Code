@@ -52,10 +52,10 @@ function Install(props: { api: TuiPluginApi }) {
 
   return (
     <props.api.ui.DialogPrompt
-      title="Install plugin"
-      placeholder="npm package name"
+      title={props.api.i18n.t("tui.dialog.plugins.install.title")}
+      placeholder={props.api.i18n.t("tui.dialog.plugins.package.placeholder")}
       busy={busy()}
-      busyText="Installing plugin..."
+      busyText={props.api.i18n.t("tui.toast.plugin_installing")}
       description={() => (
         <box flexDirection="row" gap={1}>
           <text fg={props.api.theme.current.textMuted}>scope:</text>
@@ -206,13 +206,13 @@ function View(props: { api: TuiPluginApi }) {
 
   return (
     <DialogSelect
-      title="Plugins"
+      title={props.api.i18n.t("tui.dialog.plugins.title")}
       options={rows()}
       current={cur()}
       onMove={(item) => setCur(item.value)}
       keybind={[
         {
-          title: "toggle",
+          title: props.api.i18n.t("tui.dialog.mcp.toggle"),
           keybind: key,
           disabled: lock(),
           onTrigger: (item) => {
@@ -221,7 +221,7 @@ function View(props: { api: TuiPluginApi }) {
           },
         },
         {
-          title: "install",
+          title: props.api.i18n.t("tui.dialog.plugins.install_action"),
           keybind: add,
           disabled: lock(),
           onTrigger: () => {

@@ -172,12 +172,13 @@ export async function runCustomProviderWizard(opts: {
     return DialogPrompt.show(dialog, `${title} (${n}/${total})`, { placeholder, value })
   }
 
-  const providerIDRaw = await step(1, 6, "Provider id", "e.g. mimorouter")
+  const t = useLanguage().t
+  const providerIDRaw = await step(1, 6, t("tui.dialog.provider.wizard.id"), t("tui.dialog.provider.wizard.id_hint"))
   if (providerIDRaw === null) return
   const providerID = providerIDRaw.trim()
   if (!providerID) return
 
-  const nameRaw = await step(2, 6, "Display name", "e.g. MiMo Router", providerID)
+  const nameRaw = await step(2, 6, t("tui.dialog.provider.wizard.name"), t("tui.dialog.provider.wizard.name_hint"), providerID)
   if (nameRaw === null) return
   const name = nameRaw.trim() || providerID
 
@@ -191,12 +192,12 @@ export async function runCustomProviderWizard(opts: {
   const apiKey = apiKeyRaw.trim()
   if (!apiKey) return
 
-  const modelIDRaw = await step(5, 6, "First model id", "e.g. claude-sonnet-4-6")
+  const modelIDRaw = await step(5, 6, t("tui.dialog.provider.wizard.first_model_id"), t("tui.dialog.provider.wizard.first_model_id_hint"))
   if (modelIDRaw === null) return
   const modelID = modelIDRaw.trim()
   if (!modelID) return
 
-  const modelNameRaw = await step(6, 6, "First model name", "e.g. Claude Sonnet 4.6", modelID)
+  const modelNameRaw = await step(6, 6, t("tui.dialog.provider.wizard.first_model_name"), t("tui.dialog.provider.wizard.first_model_name_hint"), modelID)
   if (modelNameRaw === null) return
   const modelName = modelNameRaw.trim() || modelID
 

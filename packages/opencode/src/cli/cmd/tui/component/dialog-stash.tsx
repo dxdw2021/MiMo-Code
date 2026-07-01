@@ -4,9 +4,10 @@ import { createMemo, createSignal } from "solid-js"
 import { Locale } from "@/util"
 import { useTheme } from "../context/theme"
 import { useKeybind } from "../context/keybind"
+import { useLanguage } from "@tui/context/language"
 import { usePromptStash, type StashEntry } from "./prompt/stash"
 
-function getRelativeTime(timestamp: number): string {
+function getRelativeTime(timestamp: number, t: (key: string) => string): string {
   const now = Date.now()
   const diff = now - timestamp
   const seconds = Math.floor(diff / 1000)
@@ -14,10 +15,10 @@ function getRelativeTime(timestamp: number): string {
   const hours = Math.floor(minutes / 60)
   const days = Math.floor(hours / 24)
 
-  if (seconds < 60) return "just now"
-  if (minutes < 60) return `${minutes}m ago`
-  if (hours < 24) return `${hours}h ago`
-  if (days < 7) return `${days}d ago`
+  if (seconds < 60) return t("tui.dialog.stash.just_now")
+  if (minutes < 60) return `${minutes}${t("tui.dialog.stash.minutes_ago")}`
+  if (hours < 24) return `${hours}${t("tui.dialog.stash.hours_ago")}`
+  if (days < 7) return `${days}${t("tui.dialog.stash.days_ago")}`
   return Locale.datetime(timestamp)
 }
 
@@ -31,6 +32,7 @@ export function DialogStash(props: { onSelect: (entry: StashEntry) => void }) {
   const stash = usePromptStash()
   const { theme } = useTheme()
   const keybind = useKeybind()
+  const t = useLanguage().t
 
   const [toDelete, setToDelete] = createSignal<number>()
 
@@ -45,7 +47,7 @@ export function DialogStash(props: { onSelect: (entry: StashEntry) => void }) {
           title: isDeleting ? `Press ${keybind.print("stash_delete")} again to confirm` : getStashPreview(entry.input),
           bg: isDeleting ? theme.error : undefined,
           value: index,
-          description: getRelativeTime(entry.timestamp),
+          description: getRelativeTime(entry.timestamp, t),
           footer: lineCount > 1 ? `~${lineCount} lines` : undefined,
         }
       })
@@ -54,7 +56,7 @@ export function DialogStash(props: { onSelect: (entry: StashEntry) => void }) {
 
   return (
     <DialogSelect
-      title="Stash"
+      title={t("tui.dialog.stash.title")}
       options={options()}
       onMove={() => {
         setToDelete(undefined)

@@ -1,11 +1,13 @@
 import { DialogSelect } from "@tui/ui/dialog-select"
 import { useRoute } from "@tui/context/route"
 import { useSync } from "@tui/context/sync"
+import { useLanguage } from "@tui/context/language"
 import { createMemo } from "solid-js"
 
 export function DialogSubagent(props: { sessionID: string }) {
   const route = useRoute()
   const sync = useSync()
+  const t = useLanguage().t
 
   const actors = createMemo(() =>
     (sync.data.actor[props.sessionID] ?? [])
@@ -18,9 +20,9 @@ export function DialogSubagent(props: { sessionID: string }) {
     if (list.length === 0) {
       return [
         {
-          title: "(no subagents in this session)",
+          title: t("tui.dialog.subagent.no_results"),
           value: "empty",
-          description: "spawn one via the actor tool",
+          description: t("tui.dialog.subagent.hint"),
           onSelect: (dialog: { clear: () => void }) => dialog.clear(),
         },
       ]
@@ -43,5 +45,5 @@ export function DialogSubagent(props: { sessionID: string }) {
     }))
   })
 
-  return <DialogSelect title="Subagents" options={options()} />
+  return <DialogSelect title={t("tui.dialog.subagents.title")} options={options()} />
 }

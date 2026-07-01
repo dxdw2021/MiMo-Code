@@ -746,4 +746,49 @@ export const dict: Record<string, string> = {
   // Session UI
   "tui.session.ui.change": "change",
   "tui.session.ui.changes": "changes",
+
+  // InlineTool pending states
+  "tui.pending.asking": "Asking...",
+  "tui.pending.writing_command": "Writing command...",
+  "tui.pending.updating_tasks": "Updating tasks...",
+  "tui.pending.starting_workflow": "Starting workflow...",
+  "tui.pending.preparing_write": "Preparing write...",
+  "tui.pending.finding_files": "Finding files...",
+  "tui.pending.reading_file": "Reading file...",
+  "tui.pending.searching_content": "Searching content...",
+  "tui.pending.fetching_web": "Fetching from the web...",
+  "tui.pending.searching_code": "Searching code...",
+  "tui.pending.searching_web": "Searching web...",
+  "tui.pending.delegating": "Delegating...",
+  "tui.pending.preparing_edit": "Preparing edit...",
+  "tui.pending.preparing_patch": "Preparing patch...",
+  "tui.pending.questions": "Questions",
+  "tui.pending.asking_questions": "Asking questions...",
+  "tui.pending.loading_skill": "Loading skill...",
+
+  // Dialog titles
+  "tui.dialog.sessions.title": "Sessions",
+  "tui.dialog.workflows.title": "Workflows",
+  "tui.dialog.themes.title": "Themes",
+  "tui.dialog.autocomplete.title": "Autocomplete",
+  "tui.dialog.skills.title": "Skills",
+  "tui.dialog.skills.search": "Search skills...",
+  "tui.dialog.subagents.title": "Subagents",
+  "tui.dialog.plugins.install.title": "Install plugin",
+  "tui.dialog.plugins.package.placeholder": "npm package name",
+
+  // Provider wizard
+  "tui.dialog.provider.wizard.id": "Provider id",
+  "tui.dialog.provider.wizard.id_hint": "e.g. mimorouter",
+  "tui.dialog.provider.wizard.name": "Display name",
+  "tui.dialog.provider.wizard.name_hint": "e.g. MiMo Router",
+  "tui.dialog.provider.wizard.first_model_id": "First model id",
+  "tui.dialog.provider.wizard.first_model_id_hint": "e.g. claude-sonnet-4-6",
+  "tui.dialog.provider.wizard.first_model_name": "First model name",
+  "tui.dialog.provider.wizard.first_model_name_hint": "e.g. Claude Sonnet 4.6",
+
+  // Error states
+  "tui.error.provider_overloaded": "Provider is overloaded",
+  "tui.error.retryable": "retryable",
+  "tui.error.non_retryable": "non-retryable",
 }

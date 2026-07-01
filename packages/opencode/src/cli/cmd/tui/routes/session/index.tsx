@@ -1866,6 +1866,7 @@ type ToolProps<T> = {
 }
 function PlanExit(props: ToolProps<any>) {
   const { theme } = useTheme()
+  const t = useLanguage().t
   const dismissed = createMemo(
     () => props.part.state.status === "completed" && props.part.state.metadata?.switched === false,
   )
@@ -1873,7 +1874,7 @@ function PlanExit(props: ToolProps<any>) {
 
   return (
     <>
-      <InlineTool icon="⚙" pending="Asking..." complete={true} part={props.part} dismissed={dismissed()}>
+      <InlineTool icon="⚙" pending={t("tui.pending.asking")} complete={true} part={props.part} dismissed={dismissed()}>
         plan_exit
       </InlineTool>
       <Show when={feedback()}>
@@ -1903,7 +1904,7 @@ function GenericTool(props: ToolProps<any>) {
     <Show
       when={props.output && ctx.showGenericToolOutput()}
       fallback={
-        <InlineTool icon="⚙" pending="Writing command..." complete={true} part={props.part}>
+        <InlineTool icon="⚙" pending={t("tui.pending.writing_command")} complete={true} part={props.part}>
           {props.tool} {input(props.input)}
         </InlineTool>
       }
@@ -1929,6 +1930,7 @@ function GenericTool(props: ToolProps<any>) {
 // one-liner derived from the nested `{ operation: { action } }` discriminator,
 // so task create/start/done don't fall through to GenericTool's raw-JSON dump.
 function WorkItemTask(props: ToolProps<typeof TaskTool>) {
+  const t = useLanguage().t
   const summary = createMemo(() => {
     const op = (props.input as { operation?: Record<string, any> }).operation
     if (!op || typeof op !== "object") return "task"
@@ -1939,7 +1941,7 @@ function WorkItemTask(props: ToolProps<typeof TaskTool>) {
     return verb
   })
   return (
-    <InlineTool icon="#" pending="Updating tasks..." complete={true} part={props.part}>
+    <InlineTool icon="#" pending={t("tui.pending.updating_tasks")} complete={true} part={props.part}>
       task {summary()}
     </InlineTool>
   )
@@ -1956,6 +1958,7 @@ function WorkItemTask(props: ToolProps<typeof TaskTool>) {
 function Workflow(props: ToolProps<typeof WorkflowTool>) {
   const sync = useSync()
   const fullRoute = useRoute()
+  const t = useLanguage().t
 
   const operation = createMemo(() => {
     const op = (props.input as { operation?: string }).operation
@@ -2009,7 +2012,7 @@ function Workflow(props: ToolProps<typeof WorkflowTool>) {
   // live transcript — keep them as a compact inline line.
   return (
     <Show when={operation() === "run"} fallback={
-      <InlineTool icon="⚡" spinner={isRunning()} pending="Starting workflow..." complete={true} part={props.part}>
+      <InlineTool icon="⚡" spinner={isRunning()} pending={t("tui.pending.starting_workflow")} complete={true} part={props.part}>
         {`workflow ${operation()}${runID() ? ` ${runID()}` : ""}`}
       </InlineTool>
     }>
@@ -2581,7 +2584,7 @@ function Bash(props: ToolProps<typeof BashTool>) {
         </BlockTool>
       </Match>
       <Match when={true}>
-        <InlineTool icon="$" pending="Writing command..." complete={props.input.command} part={props.part}>
+        <InlineTool icon="$" pending={t("tui.pending.writing_command")} complete={props.input.command} part={props.part}>
           {props.input.command}
         </InlineTool>
       </Match>
@@ -2633,7 +2636,7 @@ function Write(props: ToolProps<typeof WriteTool>) {
         </BlockTool>
       </Match>
       <Match when={true}>
-        <InlineTool icon="←" pending="Preparing write..." complete={props.input.file_path} part={props.part}>
+        <InlineTool icon="←" pending={t("tui.pending.preparing_write")} complete={props.input.file_path} part={props.part}>
           Write {normalizePath(props.input.file_path!)}
         </InlineTool>
       </Match>
@@ -2642,8 +2645,9 @@ function Write(props: ToolProps<typeof WriteTool>) {
 }
 
 function Glob(props: ToolProps<typeof GlobTool>) {
+  const t = useLanguage().t
   return (
-    <InlineTool icon="✱" pending="Finding files..." complete={props.input.pattern} part={props.part}>
+    <InlineTool icon="✱" pending={t("tui.pending.finding_files")} complete={props.input.pattern} part={props.part}>
       Glob "{props.input.pattern}" <Show when={props.input.path}>in {normalizePath(props.input.path)} </Show>
       <Show when={props.metadata.count}>
         ({props.metadata.count} {props.metadata.count === 1 ? "match" : "matches"})
@@ -2654,6 +2658,7 @@ function Glob(props: ToolProps<typeof GlobTool>) {
 
 function Read(props: ToolProps<typeof ReadTool>) {
   const { theme } = useTheme()
+  const t = useLanguage().t
   const isRunning = createMemo(() => props.part.state.status === "running")
   const loaded = createMemo(() => {
     if (props.part.state.status !== "completed") return []
@@ -2666,7 +2671,7 @@ function Read(props: ToolProps<typeof ReadTool>) {
     <>
       <InlineTool
         icon="→"
-        pending="Reading file..."
+        pending={t("tui.pending.reading_file")}
         complete={props.input.file_path}
         spinner={isRunning()}
         part={props.part}
@@ -2687,8 +2692,9 @@ function Read(props: ToolProps<typeof ReadTool>) {
 }
 
 function Grep(props: ToolProps<typeof GrepTool>) {
+  const t = useLanguage().t
   return (
-    <InlineTool icon="✱" pending="Searching content..." complete={props.input.pattern} part={props.part}>
+    <InlineTool icon="✱" pending={t("tui.pending.searching_content")} complete={props.input.pattern} part={props.part}>
       Grep "{props.input.pattern}" <Show when={props.input.path}>in {normalizePath(props.input.path)} </Show>
       <Show when={props.metadata.matches}>
         ({props.metadata.matches} {props.metadata.matches === 1 ? "match" : "matches"})
@@ -2698,8 +2704,9 @@ function Grep(props: ToolProps<typeof GrepTool>) {
 }
 
 function WebFetch(props: ToolProps<typeof WebFetchTool>) {
+  const t = useLanguage().t
   return (
-    <InlineTool icon="%" pending="Fetching from the web..." complete={props.input.url} part={props.part}>
+    <InlineTool icon="%" pending={t("tui.pending.fetching_web")} complete={props.input.url} part={props.part}>
       WebFetch {props.input.url}
     </InlineTool>
   )
@@ -2707,8 +2714,9 @@ function WebFetch(props: ToolProps<typeof WebFetchTool>) {
 
 function CodeSearch(props: ToolProps<typeof CodeSearchTool>) {
   const metadata = props.metadata as { results?: number }
+  const t = useLanguage().t
   return (
-    <InlineTool icon="◇" pending="Searching code..." complete={props.input.query} part={props.part}>
+    <InlineTool icon="◇" pending={t("tui.pending.searching_code")} complete={props.input.query} part={props.part}>
       Exa Code Search "{props.input.query}" <Show when={metadata.results}>({metadata.results} results)</Show>
     </InlineTool>
   )
@@ -2716,8 +2724,9 @@ function CodeSearch(props: ToolProps<typeof CodeSearchTool>) {
 
 function WebSearch(props: ToolProps<typeof WebSearchTool>) {
   const metadata = props.metadata as { numResults?: number }
+  const t = useLanguage().t
   return (
-    <InlineTool icon="◈" pending="Searching web..." complete={props.input.query} part={props.part}>
+    <InlineTool icon="◈" pending={t("tui.pending.searching_web")} complete={props.input.query} part={props.part}>
       Web Search "{props.input.query}" <Show when={metadata.numResults}>({metadata.numResults} results)</Show>
     </InlineTool>
   )
@@ -2726,6 +2735,7 @@ function WebSearch(props: ToolProps<typeof WebSearchTool>) {
 function Task(props: ToolProps<typeof ActorTool>) {
   const route = useRoute()
   const sync = useSync()
+  const t = useLanguage().t
 
   const input = createMemo(() => {
     const raw = props.input as Partial<{ operation: { description: string; subagent_type: string } } & {
@@ -2793,7 +2803,7 @@ function Task(props: ToolProps<typeof ActorTool>) {
       icon="│"
       spinner={isRunning()}
       complete={input().description}
-      pending="Delegating..."
+      pending={t("tui.pending.delegating")}
       part={props.part}
       onClick={() => {
         const session = targetSession()
@@ -2860,7 +2870,7 @@ function Edit(props: ToolProps<typeof EditTool>) {
         </BlockTool>
       </Match>
       <Match when={true}>
-        <InlineTool icon="←" pending="Preparing edit..." complete={props.input.file_path} part={props.part}>
+        <InlineTool icon="←" pending={t("tui.pending.preparing_edit")} complete={props.input.file_path} part={props.part}>
           Edit {normalizePath(props.input.file_path!)} {input({ replace_all: props.input.replace_all })}
         </InlineTool>
       </Match>
@@ -2963,7 +2973,7 @@ function ApplyPatch(props: ToolProps<typeof ApplyPatchTool>) {
         </For>
       </Match>
       <Match when={true}>
-        <InlineTool icon="%" pending="Preparing patch..." complete={false} part={props.part}>
+        <InlineTool icon="%" pending={t("tui.pending.preparing_patch")} complete={false} part={props.part}>
           Patch
         </InlineTool>
       </Match>
@@ -2973,6 +2983,7 @@ function ApplyPatch(props: ToolProps<typeof ApplyPatchTool>) {
 
 function Question(props: ToolProps<typeof QuestionTool>) {
   const { theme } = useTheme()
+  const t = useLanguage().t
   const count = createMemo(() => props.input.questions?.length ?? 0)
 
   function format(answer?: ReadonlyArray<string>) {
@@ -2983,7 +2994,7 @@ function Question(props: ToolProps<typeof QuestionTool>) {
   return (
     <Switch>
       <Match when={props.metadata.answers}>
-        <BlockTool title="# Questions" part={props.part}>
+        <BlockTool title={`# ${t("tui.pending.questions")}`} part={props.part}>
           <box gap={1}>
             <For each={props.input.questions ?? []}>
               {(q, i) => (
@@ -2997,7 +3008,7 @@ function Question(props: ToolProps<typeof QuestionTool>) {
         </BlockTool>
       </Match>
       <Match when={true}>
-        <InlineTool icon="→" pending="Asking questions..." complete={count()} part={props.part}>
+        <InlineTool icon="→" pending={t("tui.pending.asking_questions")} complete={count()} part={props.part}>
           Asked {count()} question{count() !== 1 ? "s" : ""}
         </InlineTool>
       </Match>
@@ -3006,8 +3017,9 @@ function Question(props: ToolProps<typeof QuestionTool>) {
 }
 
 function Skill(props: ToolProps<typeof SkillTool>) {
+  const t = useLanguage().t
   return (
-    <InlineTool icon="→" pending="Loading skill..." complete={props.input.name} part={props.part}>
+    <InlineTool icon="→" pending={t("tui.pending.loading_skill")} complete={props.input.name} part={props.part}>
       Skill "{props.input.name}"
     </InlineTool>
   )

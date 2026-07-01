@@ -739,4 +739,49 @@ export const dict = {
   // Session UI
   "tui.session.ui.change": "处更改",
   "tui.session.ui.changes": "处更改",
+
+  // InlineTool pending states
+  "tui.pending.asking": "询问中...",
+  "tui.pending.writing_command": "写入命令中...",
+  "tui.pending.updating_tasks": "更新任务中...",
+  "tui.pending.starting_workflow": "启动工作流中...",
+  "tui.pending.preparing_write": "准备写入中...",
+  "tui.pending.finding_files": "查找文件中...",
+  "tui.pending.reading_file": "读取文件中...",
+  "tui.pending.searching_content": "搜索内容中...",
+  "tui.pending.fetching_web": "从网页获取中...",
+  "tui.pending.searching_code": "搜索代码中...",
+  "tui.pending.searching_web": "搜索网页中...",
+  "tui.pending.delegating": "委派中...",
+  "tui.pending.preparing_edit": "准备编辑中...",
+  "tui.pending.preparing_patch": "准备补丁中...",
+  "tui.pending.questions": "问题",
+  "tui.pending.asking_questions": "提问中...",
+  "tui.pending.loading_skill": "加载技能中...",
+
+  // Dialog titles
+  "tui.dialog.sessions.title": "会话",
+  "tui.dialog.workflows.title": "工作流",
+  "tui.dialog.themes.title": "主题",
+  "tui.dialog.autocomplete.title": "自动补全",
+  "tui.dialog.skills.title": "技能",
+  "tui.dialog.skills.search": "搜索技能...",
+  "tui.dialog.subagents.title": "子智能体",
+  "tui.dialog.plugins.install.title": "安装插件",
+  "tui.dialog.plugins.package.placeholder": "npm 包名称",
+
+  // Provider wizard
+  "tui.dialog.provider.wizard.id": "提供商 ID",
+  "tui.dialog.provider.wizard.id_hint": "例如 mimorouter",
+  "tui.dialog.provider.wizard.name": "显示名称",
+  "tui.dialog.provider.wizard.name_hint": "例如 MiMo Router",
+  "tui.dialog.provider.wizard.first_model_id": "第一个模型 ID",
+  "tui.dialog.provider.wizard.first_model_id_hint": "例如 claude-sonnet-4-6",
+  "tui.dialog.provider.wizard.first_model_name": "第一个模型名称",
+  "tui.dialog.provider.wizard.first_model_name_hint": "例如 Claude Sonnet 4.6",
+
+  // Error states
+  "tui.error.provider_overloaded": "提供商过载",
+  "tui.error.retryable": "可重试",
+  "tui.error.non_retryable": "不可重试",
 } satisfies Partial<Record<Keys, string>>
