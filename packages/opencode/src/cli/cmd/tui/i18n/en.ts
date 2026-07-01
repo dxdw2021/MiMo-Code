@@ -684,4 +684,66 @@ export const dict: Record<string, string> = {
   "tui.permission.cancel_key": "cancel",
   "tui.permission.reject_title": "Reject permission",
   "tui.permission.reject_hint": "Tell MiMoCode what to do differently",
+
+  // Additional permission UI
+  "tui.permission.required_text": "Permission required",
+  "tui.permission.no_diff": "No diff provided",
+  "tui.permission.allow_patterns": "This will allow the following patterns until MiMoCode is restarted",
+  "tui.permission.shell_command": "Shell command",
+
+  // Error component
+  "tui.error.copied": "Successfully copied",
+
+  // Dialog status
+  "tui.dialog.status.pending_approval": "Pending approval",
+  "tui.dialog.status.disabled_config": "Disabled in configuration",
+
+  // Dialog provider
+  "tui.dialog.provider.waiting_auth": "Waiting for authorization...",
+  "tui.dialog.provider.auth_code": "Authorization code",
+  "tui.dialog.provider.invalid_code": "Invalid code",
+  "tui.dialog.provider.popular": "Popular providers",
+
+  // Dialog model
+  "tui.dialog.model.connect_provider": "Connect provider",
+
+  // Autocomplete
+  "tui.autocomplete.no_match": "No matching items",
+
+  // Workflow
+  "tui.workflow.resume": "Resume workflow",
+
+  // Go upsell
+  "tui.dialog.go.subscribe": "Subscribe to ",
+
+  // Unknown error
+  "tui.error.unknown": "Unknown error",
+
+  // Error component
+  "tui.error.report_issue": "Please report an issue.",
+  "tui.error.copy_url": "Copy issue URL (exception info pre-filled)",
+  "tui.error.fatal": "A fatal error occurred!",
+  "tui.error.reset": "Reset TUI",
+  "tui.error.exit": "Exit",
+
+  // Provider dialog
+  "tui.dialog.provider.api_key": "API key",
+  "tui.dialog.provider.zen_desc": "OpenCode Zen gives you access to all the best coding models at the cheapest prices with a single API key.",
+  "tui.dialog.provider.zen_link": "Go to https://opencode.ai/zen to get a key",
+
+  // Model dialog
+  "tui.dialog.model.model_id": "Model id",
+  "tui.dialog.model.gateway_id": "gateway model id",
+  "tui.dialog.model.display_name": "Display name",
+  "tui.dialog.model.shown_in_picker": "shown in model picker",
+
+  // Error messages
+  "tui.error.output_limit": "Output length limit reached",
+
+  // Workflow
+  "tui.workflow.resume_confirm": "Re-run \"{{name}}\"? This re-executes the workflow and may incur cost.",
+
+  // Session UI
+  "tui.session.ui.change": "change",
+  "tui.session.ui.changes": "changes",
 }

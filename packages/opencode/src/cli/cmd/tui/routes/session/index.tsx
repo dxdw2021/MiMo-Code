@@ -1558,9 +1558,9 @@ const PART_MAPPING = {
 
 type MessageError = NonNullable<AssistantMessage["error"]>
 
-function errorBody(error: MessageError): string {
-  if (error.name === "MessageOutputLengthError") return "Output length limit reached"
-  return (error.data as { message?: string }).message ?? "Unknown error"
+function errorBody(error: MessageError, t: (key: string) => string): string {
+  if (error.name === "MessageOutputLengthError") return t("tui.error.output_limit")
+  return (error.data as { message?: string }).message ?? t("tui.error.unknown")
 }
 
 function errorMeta(error: MessageError): string | undefined {
@@ -1577,12 +1577,13 @@ function errorMeta(error: MessageError): string | undefined {
 
 function ErrorBlock(props: { error: MessageError }) {
   const { theme } = useTheme()
+  const t = useLanguage().t
   const meta = createMemo(() => errorMeta(props.error))
   return (
     <box flexDirection="column" paddingLeft={3} marginTop={1}>
       <text fg={theme.error} wrapMode="word">
         <span style={{ fg: theme.error }}>✗  </span>
-        {errorBody(props.error)}
+        {errorBody(props.error, t)}
       </text>
       <Show when={meta()}>
         <box paddingLeft={3}>
@@ -2247,10 +2248,11 @@ function WorkflowPage(props: {
     return s === "running" || s === "failed" || s === "cancelled"
   })
   const resume = async () => {
+    const t = useLanguage().t
     const ok = await DialogConfirm.show(
       dialog,
-      "Resume workflow",
-      `Re-run "${run()?.name ?? props.runID}"? This re-executes the workflow and may incur cost.`,
+      t("tui.workflow.resume"),
+      t("tui.workflow.resume_confirm", { name: run()?.name ?? props.runID }),
     )
     if (ok === true) void sync.resumeWorkflow(props.runID)
   }
@@ -2589,6 +2591,7 @@ function Bash(props: ToolProps<typeof BashTool>) {
 
 function Write(props: ToolProps<typeof WriteTool>) {
   const { theme, syntax } = useTheme()
+  const t = useLanguage().t
   const [expanded, setExpanded] = createSignal(false)
   const code = createMemo(() => {
     if (!props.input.content) return ""
@@ -2623,7 +2626,7 @@ function Write(props: ToolProps<typeof WriteTool>) {
               />
             </line_number>
             <Show when={collapsed()}>
-              <text fg={theme.textMuted}>Click to collapse</text>
+              <text fg={theme.textMuted}>{t("tui.session.ui.collapse")}</text>
             </Show>
           </Show>
           <Diagnostics diagnostics={props.metadata.diagnostics} filePath={props.input.file_path ?? ""} />
@@ -2815,6 +2818,7 @@ function Task(props: ToolProps<typeof ActorTool>) {
 function Edit(props: ToolProps<typeof EditTool>) {
   const ctx = use()
   const { theme, syntax } = useTheme()
+  const t = useLanguage().t
 
   const view = createMemo(() => {
     const diffStyle = ctx.tui.diff_style
@@ -2867,6 +2871,7 @@ function Edit(props: ToolProps<typeof EditTool>) {
 function ApplyPatch(props: ToolProps<typeof ApplyPatchTool>) {
   const ctx = use()
   const { theme, syntax } = useTheme()
+  const t = useLanguage().t
   const [expanded, setExpanded] = createSignal<string[]>([])
 
   const files = createMemo(() => props.metadata.files ?? [])
@@ -2941,13 +2946,13 @@ function ApplyPatch(props: ToolProps<typeof ApplyPatchTool>) {
                     when={!collapsed() || open()}
                     fallback={
                       <text fg={theme.textMuted}>
-                        Click to expand ({count()} change{count() !== 1 ? "s" : ""})
+                        {t("tui.session.ui.expand")} ({count()} {t(count() !== 1 ? "tui.session.ui.changes" : "tui.session.ui.change")})
                       </text>
                     }
                   >
                     <Diff diff={file.patch} filePath={file.filePath} />
                     <Show when={collapsed()}>
-                      <text fg={theme.textMuted}>Click to collapse</text>
+                      <text fg={theme.textMuted}>{t("tui.session.ui.collapse")}</text>
                     </Show>
                   </Show>
                   <Diagnostics diagnostics={props.metadata.diagnostics} filePath={file.movePath ?? file.filePath} />

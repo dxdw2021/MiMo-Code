@@ -216,7 +216,7 @@ export function DialogModel(props: { providerID?: string }) {
           providers(),
           map((option) => ({
             ...option,
-            category: "Popular providers",
+            category: t("tui.dialog.provider.popular"),
           })),
           take(6),
         )
@@ -264,14 +264,14 @@ export function DialogModel(props: { providerID?: string }) {
       keybind={[
         {
           keybind: keybind.all.model_provider_list?.[0],
-          title: "Connect provider",
+          title: t("tui.dialog.model.connect_provider"),
           onTrigger() {
             dialog.replace(() => <DialogMimoLogin />)
           },
         },
         {
           keybind: keybind.all.model_favorite_toggle?.[0],
-          title: "Favorite",
+          title: t("tui.dialog.model.favorite"),
           disabled: !connected(),
           onTrigger: (option) => {
             const v = option.value as { providerID: string; modelID: string }
@@ -302,12 +302,14 @@ async function runAddModelWizard(opts: {
     return DialogPrompt.show(dialog, `${title} (${n}/${total})`, { placeholder, value })
   }
 
-  const modelIDRaw = await step(1, 2, "Model id", "gateway model id")
+  const t = useLanguage().t
+
+  const modelIDRaw = await step(1, 2, t("tui.dialog.model.model_id"), t("tui.dialog.model.gateway_id"))
   if (modelIDRaw === null) return
   const modelID = modelIDRaw.trim()
   if (!modelID) return
 
-  const modelNameRaw = await step(2, 2, "Display name", "shown in model picker", modelID)
+  const modelNameRaw = await step(2, 2, t("tui.dialog.model.display_name"), t("tui.dialog.model.shown_in_picker"), modelID)
   if (modelNameRaw === null) return
   const modelName = modelNameRaw.trim() || modelID
 

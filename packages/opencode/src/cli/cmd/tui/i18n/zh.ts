@@ -677,4 +677,66 @@ export const dict = {
   "tui.permission.cancel_key": "取消",
   "tui.permission.reject_title": "拒绝权限",
   "tui.permission.reject_hint": "告诉 MiMoCode 应该如何调整",
+
+  // Additional permission UI
+  "tui.permission.required_text": "需要权限",
+  "tui.permission.no_diff": "未提供差异",
+  "tui.permission.allow_patterns": "这将允许以下模式直到 MiMoCode 重启",
+  "tui.permission.shell_command": "Shell 命令",
+
+  // Error component
+  "tui.error.copied": "已成功复制",
+
+  // Dialog status
+  "tui.dialog.status.pending_approval": "等待审批",
+  "tui.dialog.status.disabled_config": "配置中已禁用",
+
+  // Dialog provider
+  "tui.dialog.provider.waiting_auth": "等待授权...",
+  "tui.dialog.provider.auth_code": "授权码",
+  "tui.dialog.provider.invalid_code": "无效的代码",
+  "tui.dialog.provider.popular": "常用服务商",
+
+  // Dialog model
+  "tui.dialog.model.connect_provider": "连接服务商",
+
+  // Autocomplete
+  "tui.autocomplete.no_match": "没有匹配项",
+
+  // Workflow
+  "tui.workflow.resume": "恢复工作流",
+
+  // Go upsell
+  "tui.dialog.go.subscribe": "订阅 ",
+
+  // Unknown error
+  "tui.error.unknown": "未知错误",
+
+  // Error component
+  "tui.error.report_issue": "请报告问题。",
+  "tui.error.copy_url": "复制问题 URL（异常信息已预填）",
+  "tui.error.fatal": "发生致命错误！",
+  "tui.error.reset": "重置 TUI",
+  "tui.error.exit": "退出",
+
+  // Provider dialog
+  "tui.dialog.provider.api_key": "API 密钥",
+  "tui.dialog.provider.zen_desc": "OpenCode Zen 通过单个 API 密钥为您提供所有最佳编码模型的最低价格访问。",
+  "tui.dialog.provider.zen_link": "访问 https://opencode.ai/zen 获取密钥",
+
+  // Model dialog
+  "tui.dialog.model.model_id": "模型 ID",
+  "tui.dialog.model.gateway_id": "网关模型 ID",
+  "tui.dialog.model.display_name": "显示名称",
+  "tui.dialog.model.shown_in_picker": "在模型选择器中显示",
+
+  // Error messages
+  "tui.error.output_limit": "输出长度已达上限",
+
+  // Workflow
+  "tui.workflow.resume_confirm": "重新运行 \"{{name}}\"？这将重新执行工作流并可能产生费用。",
+
+  // Session UI
+  "tui.session.ui.change": "处更改",
+  "tui.session.ui.changes": "处更改",
 } satisfies Partial<Record<Keys, string>>
