@@ -1691,6 +1691,7 @@ function ReasoningHeader(props: {
   duration?: string
 }) {
   const { theme } = useTheme()
+  const t = useLanguage().t
   const fg = () =>
     props.open
       ? RGBA.fromValues(theme.warning.r, theme.warning.g, theme.warning.b, theme.thinkingOpacity)
@@ -1700,7 +1701,7 @@ function ReasoningHeader(props: {
     <Switch>
       <Match when={!props.done}>
         <box flexDirection="row">
-          <Spinner color={fg()}>{props.title ? "Thinking: " + props.title : "Thinking"}</Spinner>
+          <Spinner color={fg()}>{props.title ? t("tui.thinking.loading_with_title", { title: props.title }) : t("tui.thinking.loading")}</Spinner>
         </box>
       </Match>
       <Match when={true}>
@@ -1708,7 +1709,7 @@ function ReasoningHeader(props: {
           <Show when={props.toggleable}>
             <span>{props.open ? "- " : "+ "}</span>
           </Show>
-          <span>Thought</span>
+          <span>{t("tui.thinking.label")}</span>
           <Show when={props.title || props.duration}>
             <span>: </span>
           </Show>

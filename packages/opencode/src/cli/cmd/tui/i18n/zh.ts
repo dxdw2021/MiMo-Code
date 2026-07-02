@@ -255,6 +255,13 @@ export const dict = {
   "tui.dialog.agreement.confirm": "同意并继续",
   "tui.dialog.variant.select": "选择变体",
   "tui.dialog.variant.default": "默认",
+  "tui.model.variant.low": "低",
+  "tui.model.variant.medium": "中",
+  "tui.model.variant.high": "高",
+  "tui.model.variant.xhigh": "超高",
+  "tui.model.variant.max": "最大",
+  "tui.model.variant.none": "无",
+  "tui.model.variant.minimal": "最小",
   "tui.permission.required": "需要授权",
   "tui.permission.allow_once": "允许一次",
   "tui.permission.allow_always": "始终允许",
@@ -784,4 +791,9 @@ export const dict = {
   "tui.error.provider_overloaded": "提供商过载",
   "tui.error.retryable": "可重试",
   "tui.error.non_retryable": "不可重试",
+
+  // Thinking/reasoning display
+  "tui.thinking.label": "思考",
+  "tui.thinking.loading": "思考中",
+  "tui.thinking.loading_with_title": "思考中：{{title}}",
 } satisfies Partial<Record<Keys, string>>

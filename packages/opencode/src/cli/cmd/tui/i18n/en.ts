@@ -266,6 +266,13 @@ export const dict: Record<string, string> = {
   "tui.dialog.agreement.confirm": "Agree & Continue",
   "tui.dialog.variant.select": "Select variant",
   "tui.dialog.variant.default": "Default",
+  "tui.model.variant.low": "Low",
+  "tui.model.variant.medium": "Medium",
+  "tui.model.variant.high": "High",
+  "tui.model.variant.xhigh": "XHigh",
+  "tui.model.variant.max": "Max",
+  "tui.model.variant.none": "None",
+  "tui.model.variant.minimal": "Minimal",
   "tui.permission.required": "Permission required",
   "tui.permission.allow_once": "Allow once",
   "tui.permission.allow_always": "Always allow",
@@ -791,4 +798,9 @@ export const dict: Record<string, string> = {
   "tui.error.provider_overloaded": "Provider is overloaded",
   "tui.error.retryable": "retryable",
   "tui.error.non_retryable": "non-retryable",
+
+  // Thinking/reasoning display
+  "tui.thinking.label": "Thought",
+  "tui.thinking.loading": "Thinking",
+  "tui.thinking.loading_with_title": "Thinking: {{title}}",
 }
