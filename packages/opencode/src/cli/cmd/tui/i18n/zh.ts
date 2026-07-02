@@ -262,6 +262,7 @@ export const dict = {
   "tui.model.variant.max": "最大",
   "tui.model.variant.none": "无",
   "tui.model.variant.minimal": "最小",
+  "tui.prompt.never_ask": "跳过提问",
   "tui.permission.required": "需要授权",
   "tui.permission.allow_once": "允许一次",
   "tui.permission.allow_always": "始终允许",

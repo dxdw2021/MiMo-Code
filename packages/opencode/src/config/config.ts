@@ -895,6 +895,8 @@ export const layer = Layer.effect(
         if (!Flag.MIMOCODE_DISABLE_CLAUDE_CODE_MCP) {
           yield* mergeClaudeMcp(path.join(Global.Path.home, ".claude.json"))
           yield* mergeClaudeMcp(path.join(ctx.directory, ".claude.json"))
+          yield* mergeClaudeMcp(path.join(Global.Path.home, ".claude", ".mcp.json"))
+          yield* mergeClaudeMcp(path.join(ctx.directory, ".claude", ".mcp.json"))
         }
 
         for (const [name, mode] of Object.entries(result.mode ?? {})) {

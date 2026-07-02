@@ -46,6 +46,11 @@ import { DialogWorkspaceUnavailable } from "../dialog-workspace-unavailable"
 import { DialogAgreement, FREE_AGREEMENT_KEY, FREE_MODEL_IDS } from "../dialog-agreement"
 import { useArgs } from "@tui/context/args"
 
+function getVariantLabel(t: (key: string) => string, variant: string): string {
+  const key = `tui.model.variant.${variant}`
+  return t(key) || variant
+}
+
 export type PromptProps = {
   sessionID?: string
   workspaceID?: string
@@ -1644,10 +1649,18 @@ export function Prompt(props: PromptProps) {
             <box flexDirection="row" flexShrink={0} paddingTop={1} gap={1} justifyContent="space-between">
               <box flexDirection="row" gap={1}>
                 <Show when={local.agent.current()} fallback={<box height={1} />}>
-                  {(agent) => (
+                  {(agent) => {
+                    const agentLabel = createMemo(() => {
+                      if (store.mode === "shell") return t("tui.agent.shell")
+                      const translated = t(`tui.agent.${agent().name}`)
+                      // If translation is the raw key (not found), use titlecase fallback
+                      if (translated === `tui.agent.${agent().name}`) return Locale.titlecase(agent().name)
+                      return translated
+                    })
+                    return (
                     <>
                       <text fg={fadeColor(highlight(), agentMetaAlpha())}>
-                        {store.mode === "shell" ? t("tui.agent.shell") : t(`tui.agent.${agent().name}`) || Locale.titlecase(agent().name)}
+                        {agentLabel()}
                       </text>
                       <Show when={store.mode === "normal"}>
                         <box flexDirection="row" gap={1}>
@@ -1668,18 +1681,19 @@ export function Prompt(props: PromptProps) {
                             <text fg={fadeColor(theme.textMuted, variantMetaAlpha())}>·</text>
                             <text>
                               <span style={{ fg: fadeColor(theme.warning, variantMetaAlpha()), bold: true }}>
-                                {local.model.variant.current()}
+                                {getVariantLabel(t, local.model.variant.current() ?? "")}
                               </span>
                             </text>
                           </Show>
                         </box>
                       </Show>
                     </>
-                  )}
+                    )
+                  }}
                 </Show>
                 <Show when={local.neverAsk.current()}>
                   <text>
-                    <span style={{ fg: theme.error, bold: true }}>«never-ask»</span>
+                    <span style={{ fg: theme.error, bold: true }}>{`«${t("tui.prompt.never_ask")}»`}</span>
                   </text>
                 </Show>
               </box>

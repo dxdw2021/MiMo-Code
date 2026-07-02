@@ -544,7 +544,7 @@ function App(props: { onSnapshot?: () => Promise<string[]> }) {
       slash: {
         name: "never-ask",
       },
-      onSelect: () => {
+      onSelect: (dialog) => {
         const next = !local.neverAsk.current()
         local.neverAsk.set(next)
         toast.show({
@@ -552,6 +552,7 @@ function App(props: { onSnapshot?: () => Promise<string[]> }) {
           message: next ? t("tui.command.never_ask.toast_on") : t("tui.command.never_ask.toast_off"),
           duration: 4000,
         })
+        dialog.clear()
       },
     },
     {

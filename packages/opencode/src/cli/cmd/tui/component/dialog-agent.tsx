@@ -14,7 +14,7 @@ export function DialogAgent() {
       return {
         value: item.name,
         title: item.name,
-        description: item.native ? t("tui.dialog.agent.native") : item.description,
+        description: item.native ? t(`tui.agent.${item.name}`) || t("tui.dialog.agent.native") : item.description,
       }
     }),
   )

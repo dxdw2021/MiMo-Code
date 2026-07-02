@@ -273,6 +273,7 @@ export const dict: Record<string, string> = {
   "tui.model.variant.max": "Max",
   "tui.model.variant.none": "None",
   "tui.model.variant.minimal": "Minimal",
+  "tui.prompt.never_ask": "never-ask",
   "tui.permission.required": "Permission required",
   "tui.permission.allow_once": "Allow once",
   "tui.permission.allow_always": "Always allow",

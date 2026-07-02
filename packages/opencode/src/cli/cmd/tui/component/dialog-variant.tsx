@@ -4,6 +4,11 @@ import { DialogSelect } from "@tui/ui/dialog-select"
 import { useDialog } from "@tui/ui/dialog"
 import { useLanguage } from "@tui/context/language"
 
+function getVariantLabel(t: (key: string) => string, variant: string): string {
+  const key = `tui.model.variant.${variant}`
+  return t(key) || variant
+}
+
 export function DialogVariant() {
   const local = useLocal()
   const dialog = useDialog()
@@ -21,7 +26,7 @@ export function DialogVariant() {
       },
       ...local.model.variant.list().map((variant) => ({
         value: variant,
-        title: variant,
+        title: getVariantLabel(t, variant),
         onSelect: () => {
           dialog.clear()
           local.model.variant.set(variant)

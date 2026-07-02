@@ -532,6 +532,7 @@ function pluginApi(runtime: RuntimeState, plugin: PluginEntry, scope: PluginScop
 
   return {
     app: api.app,
+    i18n: api.i18n,
     command,
     route,
     ui: api.ui,
