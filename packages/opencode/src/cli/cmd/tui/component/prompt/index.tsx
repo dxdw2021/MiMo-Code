@@ -128,7 +128,10 @@ export function Prompt(props: PromptProps) {
   // message from a previous model persists until the next prompt fires.
   createEffect(
     on(
-      () => local.model.current()?.modelID,
+      () => {
+        const m = local.model.current()
+        return m ? `${m.providerID}/${m.modelID}` : undefined
+      },
       (_prev, curr) => {
         if (!curr || !props.sessionID) return
         const s = sync.data.session_status?.[props.sessionID]
